@@ -1,12 +1,12 @@
 {
-    "name": "sistema-admin/school-manager",
-    "description": "Sistema de Administración Escolar — Gestión académica, asistencia, notas y comunicados",
+    "name": "eduschool/erp",
+    "description": "EduSchool ERP — Modular School Management System",
     "type": "project",
     "license": "proprietary",
     "authors": [
         {
-            "name": "Sistema Admin",
-            "email": ""
+            "name": "EduSchool Team",
+            "email": "support@eduschool.edu"
         }
     ],
     "require": {
