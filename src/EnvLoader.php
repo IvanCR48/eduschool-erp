@@ -123,4 +123,11 @@ class EnvLoader {
 
         return (getenv($key) !== false && getenv($key) !== '') || isset($_ENV[$key]) || isset($_SERVER[$key]);
     }
+
+    /**
+     * Compatibilidad y respaldo para setDefaultEnv
+     */
+    public static function setDefaultEnv(): void {
+        // Enlined en load()
+    }
 }
