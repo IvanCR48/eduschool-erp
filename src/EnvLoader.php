@@ -100,6 +100,8 @@ class EnvLoader {
     }
     
     /**
+     * Establece valores por defecto si no existe .env
+     */
     private static function setDefaultEnv(): void {
         $isRailway = getenv('RAILWAY_STATIC_URL') !== false || getenv('RAILWAY_PUBLIC_DOMAIN') !== false || getenv('PORT') !== false || getenv('RAILWAY_ENVIRONMENT') !== false;
 
