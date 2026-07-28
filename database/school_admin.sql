@@ -26,13 +26,13 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_limpiar_cache_expirado` ()   BEGIN
+CREATE PROCEDURE `sp_limpiar_cache_expirado` ()   BEGIN
     DELETE FROM cache_data 
     WHERE expira_en IS NOT NULL 
     AND expira_en < NOW();
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_limpiar_logs_antiguos` (IN `dias_retencion` INT)   BEGIN
+CREATE PROCEDURE `sp_limpiar_logs_antiguos` (IN `dias_retencion` INT)   BEGIN
     DELETE FROM logs_errores 
     WHERE creado_en < DATE_SUB(NOW(), INTERVAL dias_retencion DAY);
     
@@ -43,7 +43,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_limpiar_logs_antiguos` (IN `dias
     WHERE creado_en < DATE_SUB(NOW(), INTERVAL dias_retencion DAY);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_limpiar_sesiones_expiradas` ()   BEGIN
+CREATE PROCEDURE `sp_limpiar_sesiones_expiradas` ()   BEGIN
     DELETE FROM sesiones_usuarios 
     WHERE activa = 1 
     AND ultima_actividad < DATE_SUB(NOW(), INTERVAL 24 HOUR);
