@@ -18,21 +18,21 @@ if (!function_exists('sistema_admin_error_handler_register')) {
         @ini_set('display_errors', $isDev ? '1' : '0');
         @ini_set('display_startup_errors', $isDev ? '1' : '0');
 
-        set_error_handler(static function (int $severity, string $message, string $file, int $line) use ($isDev): bool {
+        set_error_handler(static function (int $severity, string $message, string $file, int $line): bool {
             if (!(error_reporting() & $severity)) {
                 return false;
             }
 
             $exception = new ErrorException($message, 0, $severity, $file, $line);
-            sistema_admin_render_friendly_error($exception, $isDev);
+            sistema_admin_render_friendly_error($exception);
             return true;
         });
 
-        set_exception_handler(static function (Throwable $exception) use ($isDev): void {
-            sistema_admin_render_friendly_error($exception, $isDev);
+        set_exception_handler(static function (Throwable $exception): void {
+            sistema_admin_render_friendly_error($exception);
         });
 
-        register_shutdown_function(static function () use ($isDev): void {
+        register_shutdown_function(static function (): void {
             $lastError = error_get_last();
             if ($lastError === null) {
                 return;
@@ -48,7 +48,7 @@ if (!function_exists('sistema_admin_error_handler_register')) {
                 (string) ($lastError['file'] ?? ''),
                 (int) ($lastError['line'] ?? 0)
             );
-            sistema_admin_render_friendly_error($exception, $isDev);
+            sistema_admin_render_friendly_error($exception);
         });
     }
 }
