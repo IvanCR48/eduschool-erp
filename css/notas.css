@@ -1,0 +1,725 @@
+/* notas.php — boletín y filtros */
+.notas-section__header-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+.notas-stat-link { color: inherit; text-decoration: none; }
+.notas-filtro-badge { margin-left: 1rem; background: #1e3a8a; color: white; padding: 0.25rem 0.5rem; border-radius: var(--border-radius); font-size: 0.75rem; }
+.form-label-heading-notas { margin: 0 0 0.5rem; font-weight: 600; color: #374151; }
+.form-info-box-notas { padding: 0.75rem; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: var(--border-radius); color: #6c757d; }
+
+/* ===== ESTILOS MODERNOS PARA EL BOLETÍN VERTICAL ===== */
+
+.hidden {
+    display: none !important;
+}
+
+.notas-section {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.notas-section .card.card--boletin {
+    overflow: visible;
+}
+
+.boletin-scroll-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-bottom: 1px solid #cbd5e1;
+}
+
+.boletin-scroll-toolbar.is-hidden { display: none; }
+
+.boletin-scroll-hint {
+    margin: 0; flex: 1; min-width: 200px;
+    text-align: center; font-size: 0.9rem; color: #475569;
+}
+
+.boletin-scroll-btn {
+    flex-shrink: 0; min-width: 2.5rem; padding: 0.5rem 0.85rem;
+}
+.boletin-scroll-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.boletin-container {
+    overflow-x: auto;
+    overflow-y: visible;
+    margin: 0;
+    max-width: 100%;
+    width: 100%;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    background: #ffffff;
+    padding: 0;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ===== TABLA VERTICAL ===== */
+.boletin-table--vertical {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    table-layout: fixed;
+}
+
+.boletin-table--vertical th,
+.boletin-table--vertical td {
+    border: 1px solid #e2e8f0;
+    padding: 8px 10px;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+}
+
+/* ── HEADER ── */
+.boletin-table--vertical thead th {
+    background: #1e3a8a;
+    color: white;
+    font-weight: 600;
+    font-size: 0.82em;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 10px 8px;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+/* ── COLUMNA ESTUDIANTE ── */
+.boletin-table--vertical .estudiante-col {
+    width: 180px;
+    min-width: 150px;
+    text-align: left;
+    position: sticky;
+    left: 0;
+    z-index: 11;
+    background: #1e3a8a;
+}
+
+.boletin-table--vertical .estudiante-cell {
+    text-align: left;
+    background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+    font-weight: 500;
+    position: sticky;
+    left: 0;
+    z-index: 5;
+    box-shadow: 3px 0 8px rgba(0,0,0,0.06);
+    color: #1e293b;
+    border-right: 2px solid #1e3a8a !important;
+    white-space: normal;
+    padding: 10px 8px !important;
+    vertical-align: middle;
+}
+
+.estudiante-cell__head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.estudiante-cell__nombre {
+    font-size: 0.85em;
+    line-height: 1.3;
+    flex: 1;
+    color: #1e293b;
+}
+
+.estudiante-link {
+    color: #1e3a8a;
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.2s, text-decoration 0.2s;
+}
+
+.estudiante-link:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.estudiante-cell__dni {
+    font-size: 0.7em;
+    color: #64748b;
+    display: block;
+    margin-top: 2px;
+}
+
+.estudiante-cell__print-btn,
+.estudiante-cell__recup-btn {
+    flex-shrink: 0;
+    font-size: 0.75em;
+    padding: 3px 5px;
+    border: none;
+    background: rgba(30, 58, 138, 0.1);
+    color: #1e3a8a;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+}
+
+.estudiante-cell__print-btn:hover,
+.estudiante-cell__recup-btn:hover {
+    background: rgba(30, 58, 138, 0.25);
+}
+
+/* ── COLUMNA MATERIA ── */
+.boletin-table--vertical .materia-name-col {
+    width: 180px;
+    min-width: 140px;
+    text-align: left;
+    background: #172554;
+}
+
+.materia-name-cell {
+    text-align: left !important;
+    font-weight: 600;
+    font-size: 0.82em;
+    color: #1e3a8a;
+    background: #f8fafc;
+    padding: 6px 10px !important;
+    white-space: normal;
+    line-height: 1.3;
+}
+
+/* ── COLUMNAS DE PERÍODO ── */
+.boletin-table--vertical .cuatrimestre-col,
+.boletin-table--vertical .avance-col,
+.boletin-table--vertical .final-col {
+    width: auto;
+    min-width: 105px;
+    white-space: nowrap;
+}
+
+.boletin-table--vertical .cuatrimestre-col {
+    background: #1e40af;
+}
+
+.boletin-table--vertical .avance-col {
+    background: #2563eb;
+}
+
+.boletin-table--vertical .final-col {
+    background: #7c3aed;
+}
+
+/* ── CELDAS DE NOTAS ── */
+.nota-cell {
+    min-width: 105px;
+    padding: 6px 8px !important;
+    background: #ffffff;
+    transition: background 0.15s ease;
+}
+
+.nota-cell:hover {
+    background: #f0f4ff;
+}
+
+/* Estados AJAX */
+.nota-cell--guardando {
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.nota-cell--ok {
+    background: #d1fae5 !important;
+    transition: background 1.6s ease;
+}
+
+.nota-cell--error {
+    background: #fee2e2 !important;
+    outline: 1px solid #f87171;
+}
+
+/* ── INPUTS Y FORMS ── */
+.nota-input-group {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+}
+
+.nota-input {
+    width: 50px;
+    padding: 5px 4px;
+    border: 1px solid #cbd5e1;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.9em;
+    font-weight: 700;
+    color: #1e293b;
+    background: white;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.nota-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.nota-input::-webkit-outer-spin-button,
+.nota-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.nota-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.obs-input {
+    width: 50px;
+    padding: 4px 3px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 0.7em;
+    color: #64748b;
+    background: #f8fafc;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.obs-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    background: #ffffff;
+}
+
+/* ── DISPLAY (read-only) ── */
+.nota-display {
+    text-align: center;
+    padding: 2px;
+}
+
+.nota-value {
+    font-weight: 700;
+    font-size: 0.9em;
+    color: #1e293b;
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 5px;
+    background: #f1f5f9;
+    min-width: 30px;
+}
+
+.nota-value.nota-final-value {
+    font-size: 0.95em;
+    background: #ede9fe;
+    color: #5b21b6;
+    font-weight: 800;
+}
+
+.obs-display {
+    margin-top: 2px;
+    color: #94a3b8;
+    font-style: italic;
+    font-size: 0.65em;
+}
+
+.nota-form { margin: 0; }
+
+/* ── AVANCE SELECTORS ── */
+.avance-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.avance-select {
+    width: 100%;
+    max-width: 70px;
+    padding: 4px 6px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-align: center;
+    background: #ffffff;
+    color: #334155;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.avance-select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.avance-select option { padding: 2px; font-weight: 600; }
+
+.avance-input-group {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+}
+
+.avance-guardar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 4px;
+}
+
+/* ── SEPARACIÓN VISUAL ENTRE ESTUDIANTES ── */
+.boletin-row--first td {
+    border-top: 2px solid #1e3a8a !important;
+}
+
+.boletin-row--last td {
+    border-bottom: 2px solid #cbd5e1 !important;
+}
+
+/* Alternar fondo entre estudiantes para legibilidad */
+.boletin-table--vertical tbody tr:hover {
+    background: #f0f4ff;
+}
+
+.boletin-table--vertical tbody tr:hover .materia-name-cell {
+    background: #e0e7ff;
+}
+
+/* ── ANIMACIONES ── */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.boletin-table--vertical tbody tr {
+    animation: fadeIn 0.25s ease-out;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    .boletin-table--vertical .estudiante-col {
+        width: 140px;
+        min-width: 130px;
+    }
+
+    .boletin-table--vertical .materia-name-col {
+        width: 130px;
+        min-width: 120px;
+    }
+
+    .estudiante-cell__nombre { 
+        font-size: 0.85em; 
+    }
+    
+    .materia-name-cell { 
+        font-size: 0.82em; 
+    }
+
+    .nota-input {
+        width: 46px;
+        font-size: 0.9em;
+        padding: 5px 3px;
+    }
+
+    .obs-input {
+        width: 44px;
+        font-size: 0.75em;
+        padding: 4px 2px;
+    }
+
+    .avance-select {
+        max-width: 65px;
+        font-size: 0.8em;
+        padding: 5px 4px;
+    }
+
+    .boletin-table--vertical th,
+    .boletin-table--vertical td {
+        padding: 8px 6px;
+    }
+
+    .notas-section__header-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .boletin-table--vertical .estudiante-col {
+        width: 120px;
+        min-width: 110px;
+    }
+
+    .boletin-table--vertical .materia-name-col {
+        width: 110px;
+        min-width: 100px;
+    }
+
+    .estudiante-cell__nombre {
+        font-size: 0.8em;
+    }
+
+    .materia-name-cell {
+        font-size: 0.78em;
+    }
+
+    .nota-input { 
+        width: 44px; 
+        font-size: 0.85em; 
+        padding: 4px 2px;
+    }
+
+    /* En pantallas muy chicas, mostramos observations como tooltip o mantenemos tamaño mínimo */
+    .obs-input { 
+        width: 40px;
+        font-size: 0.7em;
+        padding: 3px 1px;
+    }
+
+    .avance-select { 
+        max-width: 58px; 
+        font-size: 0.75em; 
+        padding: 4px 2px;
+    }
+
+    .estudiante-cell__dni { 
+        font-size: 0.65em;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+    }
+    
+    .boletin-table--vertical th,
+    .boletin-table--vertical td {
+        padding: 6px 4px;
+    }
+}
+
+/* ── SCROLLBAR ── */
+.boletin-container::-webkit-scrollbar { height: 8px; }
+.boletin-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+.boletin-container::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); border-radius: 4px; }
+.boletin-container::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); }
+
+/* ===== MODAL RECUPERATORIOS ===== */
+.notas-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.notas-modal-overlay.is-open {
+    display: flex;
+}
+
+/* Inner box — matches HTML class="notas-modal-box" */
+.notas-modal-box {
+    max-width: 520px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+    animation: fadeIn 0.25s ease-out;
+    overflow-x: hidden;
+}
+
+/* Header bar — matches HTML class="notas-modal-box__head" */
+.notas-modal-box__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.15rem 1.5rem;
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.notas-modal-box__title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* Close button — matches HTML class="notas-modal-close" */
+.notas-modal-close {
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    font-size: 1.4rem;
+    color: #fff;
+    cursor: pointer;
+    padding: 0.15rem 0.45rem;
+    border-radius: 6px;
+    line-height: 1;
+    transition: background 0.2s;
+}
+.notas-modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Form inside modal — matches HTML class="notas-modal-form" */
+.notas-modal-form {
+    padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.notas-modal-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.notas-modal-form label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #334155;
+    margin-bottom: 0.35rem;
+}
+
+.notas-modal-form select,
+.notas-modal-form input[type="number"],
+.notas-modal-form input[type="text"],
+.notas-modal-form textarea {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #f8fafc;
+    color: #1e293b;
+    box-sizing: border-box;
+}
+
+.notas-modal-form select:focus,
+.notas-modal-form input[type="number"]:focus,
+.notas-modal-form input[type="text"]:focus,
+.notas-modal-form textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    background: #fff;
+}
+
+/* Action buttons row — matches HTML class="notas-modal-form__actions" */
+.notas-modal-form__actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Body scroll lock */
+body.notas-modal-open {
+    overflow: hidden;
+}
+
+/* Responsive for the modal */
+@media (max-width: 576px) {
+    .notas-modal-box {
+        max-width: calc(100% - 1rem);
+        max-height: 95vh;
+        border-radius: 12px;
+    }
+
+    .notas-modal-box__head {
+        padding: 1rem 1.15rem;
+    }
+
+    .notas-modal-box__title {
+        font-size: 1rem;
+    }
+
+    .notas-modal-form {
+        padding: 1rem 1.15rem 1.25rem;
+    }
+
+    .notas-modal-form__actions {
+        flex-direction: column;
+    }
+
+    .notas-modal-form__actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Legacy aliases — keep old class names working if referenced elsewhere */
+.notas-modal-dialog { /* alias for notas-modal-box */ }
+.notas-modal-header { /* alias for notas-modal-box__head */ }
+.notas-modal-close-btn { /* alias for notas-modal-close */ }
+.notas-modal-body { /* alias for notas-modal-form wrapper */ }
+
+/* ====== STATS & PRINT ====== */
+.notas-card-stats {
+    display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;
+}
+
+.notas-card-stats__item {
+    display: flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; color: #64748b;
+}
+.notas-card-stats__item i { color: #94a3b8; }
+
+.boletin-print-btn-row { display: flex; justify-content: flex-end; padding: 0.5rem; }
+
+.btn-imprimir-boletin {
+    background: #1e3a8a; color: white; border: none;
+    padding: 6px 14px; border-radius: 6px; cursor: pointer;
+    font-size: 0.8em; display: inline-flex; align-items: center; gap: 4px;
+    transition: background 0.2s;
+}
+.btn-imprimir-boletin:hover { background: #1e40af; }
+
+@media print {
+    .boletin-print-btn-row,
+    .estudiante-cell__print-btn,
+    .estudiante-cell__recup-btn,
+    .notas-section__header-actions,
+    .boletin-scroll-toolbar,
+    .form-container { display: none !important; }
+
+    .estudiante-cell,
+    .estudiante-col { position: static !important; }
+
+    .boletin-table--vertical th,
+    .boletin-table--vertical td { font-size: 8pt; padding: 3px 4px; }
+
+    .nota-input, .obs-input {
+        border: none; background: transparent; font-size: 8pt; width: auto; padding: 0;
+    }
+}
+
+/* Celda deshabilitada por recursada o solapamiento */
+.cell-disabled-recursada {
+    background: #e2e8f0 !important;
+    color: #64748b !important;
+    font-size: 0.75rem;
+    font-style: italic;
+    cursor: not-allowed;
+    pointer-events: none;
+    user-select: none;
+    vertical-align: middle;
+    text-align: center;
+}

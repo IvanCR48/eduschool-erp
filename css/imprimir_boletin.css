@@ -1,0 +1,633 @@
+@media print {
+    @page {
+        margin: 0.4cm;
+        size: A4 landscape;
+    }
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    body {
+        font-size: 10px;
+        line-height: 1.25;
+    }
+    
+    .boletin-container {
+        box-shadow: none;
+        max-width: 100%;
+        width: 100%;
+    }
+    
+    .boletin-container .header {
+        padding: 8px 15px 6px;
+    }
+    
+    .school-logo {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+    
+    .school-info h1 {
+        font-size: 16px;
+        margin-bottom: 1px;
+    }
+    
+    .school-info h2 {
+        font-size: 11px;
+        margin-bottom: 4px;
+    }
+    
+    .boletin-title {
+        padding: 5px;
+        font-size: 14px;
+    }
+    
+    .student-info-section {
+        padding: 8px 15px;
+    }
+    
+    .student-info-grid {
+        gap: 8px;
+        margin-bottom: 0;
+    }
+    
+    .info-label {
+        min-width: 60px;
+        font-size: 10px;
+    }
+    
+    .info-value {
+        font-size: 10px;
+        padding: 1px 0;
+    }
+    
+    .student-photo-container {
+        width: 60px !important;
+        height: 75px !important;
+    }
+    
+    .academic-year {
+        padding: 4px;
+        font-size: 11px;
+    }
+    
+    .grades-section {
+        padding: 8px;
+    }
+    
+    .grades-table {
+        margin-top: 5px;
+        font-size: 9.5px;
+    }
+    
+    .grades-table th {
+        height: 65px;
+        padding: 4px 2px;
+    }
+    
+    .materia-header {
+        height: 65px;
+    }
+    
+    .materia-header strong {
+        font-size: 8px;
+        max-width: 50px;
+    }
+    
+    .grades-table td {
+        padding: 3px 2px;
+        width: auto;
+    }
+    
+    .nota-value, .promedio-value {
+        font-size: 10px;
+    }
+    
+    .promedio-parcial {
+        font-size: 8px;
+    }
+    
+    .attendance-summary {
+        margin-bottom: 6px;
+        padding: 6px;
+    }
+    
+    .attendance-summary h3 {
+        margin: 0 0 4px;
+        font-size: 11px;
+    }
+    
+    .attendance-summary-grid {
+        gap: 6px;
+    }
+    
+    .attendance-summary-item {
+        padding: 4px 6px;
+    }
+    
+    .attendance-summary-item__label {
+        font-size: 8px;
+    }
+    
+    .attendance-summary-item__value {
+        font-size: 14px;
+    }
+    
+    .attendance-summary-item__meta {
+        font-size: 8px;
+    }
+    
+    .summary-section {
+        padding: 8px;
+    }
+    
+    .summary-grid {
+        gap: 8px;
+        margin-bottom: 6px;
+    }
+    
+    .summary-item {
+        padding: 6px;
+        border-width: 1px;
+    }
+    
+    .summary-label {
+        font-size: 10px;
+        margin-bottom: 2px;
+    }
+    
+    .summary-value {
+        font-size: 14px;
+    }
+    
+    .boletin-promedio-general {
+        margin-top: 6px;
+    }
+    
+    .boletin-promedio-general__label {
+        font-size: 10px;
+        margin-bottom: 1px;
+    }
+    
+    .boletin-promedio-general__value {
+        font-size: 20px;
+    }
+    
+    .signature-section {
+        padding: 10px 15px;
+        gap: 15px;
+        border-top-width: 1px;
+    }
+    
+    .signature-line {
+        margin: 15px 0 4px;
+    }
+    
+    .signature-label {
+        font-size: 9px;
+    }
+    
+    .boletin-footer {
+        padding: 10px;
+        font-size: 9px;
+    }
+    
+    .boletin-footer p {
+        margin: 2px 0 0 !important;
+    }
+    
+    .watermark {
+        display: block;
+        font-size: 80px;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Times New Roman', serif;
+    margin: 0;
+    padding: 0;
+    background: white;
+    color: #000;
+    line-height: 1.4;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+.boletin-container {
+    max-width: 29.7cm;
+    margin: 0 auto;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.boletin-container .header {
+    text-align: center;
+    padding: 20px 20px 15px;
+    border-bottom: 3px solid #1a4b84;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.school-logo {
+    width: 60px;
+    height: 60px;
+    background: #1a4b84;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.school-info h1 {
+    color: #1a4b84;
+    margin: 0 0 3px 0;
+    font-size: 22px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.school-info h2 {
+    color: #495057;
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.boletin-title {
+    background: #1a4b84;
+    color: white;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+.student-info-section {
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.student-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.info-group {
+    display: flex;
+    align-items: center;
+}
+
+.info-label {
+    font-weight: bold;
+    color: #1a4b84;
+    min-width: 80px;
+    font-size: 12px;
+}
+
+.info-value {
+    font-size: 12px;
+    color: #495057;
+    border-bottom: 1px solid #ced4da;
+    padding: 3px 0;
+    flex: 1;
+}
+
+.academic-year {
+    text-align: center;
+    background: #1a4b84;
+    color: white;
+    padding: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.grades-section {
+    padding: 15px;
+}
+
+.grades-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 11px;
+}
+
+.grades-table th {
+    background: #1a4b84;
+    color: white;
+    padding: 8px 6px;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #1a4b84;
+    height: 90px;
+}
+
+.grades-table td {
+    padding: 6px 4px;
+    text-align: center;
+    border: 1px solid #dee2e6;
+    vertical-align: middle;
+    width: 60px;
+}
+
+.grades-table tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.grades-table--previas th {
+    height: auto;
+    min-height: 40px;
+    padding: 8px 10px;
+    white-space: nowrap;
+}
+
+.grades-table--previas td {
+    width: auto;
+    text-align: left;
+    padding: 8px 10px;
+}
+
+.grades-table--previas td:nth-child(2),
+.grades-table--previas td:nth-child(3) {
+    text-align: center;
+    width: 110px;
+}
+
+.avance-row {
+    background: #fdfdfd;
+}
+
+.avance-cell {
+    background: #eef2ff;
+    font-weight: bold;
+}
+
+.avance-value {
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #1a4b84;
+}
+
+.promedio-row {
+    background: #f8f9fa !important;
+    border-top: 2px solid #dee2e6;
+}
+
+.estado-row {
+    background: #f8f9fa !important;
+    border-top: 1px solid #dee2e6;
+}
+
+
+.cuatrimestre-cell {
+    text-align: left;
+    font-weight: bold;
+    color: #1a4b84;
+    padding-left: 15px !important;
+    background: #f8f9fa;
+    width: 100px;
+}
+
+.materia-header {
+    text-align: center;
+    font-weight: bold;
+    color: #1a4b84;
+    background: #e9ecef;
+    height: 90px;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.materia-header strong {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(90deg);
+    white-space: normal;
+    font-size: 9px;
+    max-width: 60px;
+    text-align: center;
+    line-height: 1.2;
+    word-wrap: break-word;
+}
+
+.nota-value {
+    font-weight: bold;
+    font-size: 12px;
+    color: #495057;
+}
+
+.promedio-value {
+    font-weight: bold;
+    font-size: 12px;
+    color: #495057;
+}
+
+.promedio-parcial {
+    font-size: 10px;
+    color: #6c757d;
+    margin-top: 2px;
+    text-transform: uppercase;
+}
+
+.promedio-pendiente {
+    color: #6c757d;
+    font-style: italic;
+    font-size: 11px;
+}
+
+.attendance-summary {
+    margin-bottom: 14px;
+    padding: 12px;
+    border: 1px solid #d8e2ef;
+    background: #f8fbff;
+    border-radius: 6px;
+}
+
+.attendance-summary h3 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    color: #1a4b84;
+    text-transform: uppercase;
+}
+
+.attendance-summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.attendance-summary-item {
+    border: 1px solid #d5deeb;
+    background: #ffffff;
+    border-radius: 5px;
+    padding: 8px 10px;
+    text-align: center;
+}
+
+.attendance-summary-item--total {
+    border-color: #b7c8de;
+    background: #eef4fb;
+}
+
+.attendance-summary-item__label {
+    font-size: 10px;
+    color: #526b87;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.attendance-summary-item__value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e3a5f;
+    line-height: 1.1;
+}
+
+.attendance-summary-item__meta {
+    font-size: 10px;
+    color: #64748b;
+}
+
+.estado.aprobado {
+    color: #495057;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.estado.reprobado {
+    color: #495057;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.estado.pendiente {
+    color: #6c757d;
+    font-style: italic;
+    font-size: 11px;
+}
+
+.summary-section {
+    padding: 15px;
+    background: #f8f9fa;
+    border-top: 2px solid #dee2e6;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.summary-item {
+    text-align: center;
+    padding: 10px;
+    background: white;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+}
+
+.summary-label {
+    font-size: 12px;
+    color: #6c757d;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.summary-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1a4b84;
+}
+
+.boletin-promedio-general {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.boletin-promedio-general__label {
+    font-size: 12px;
+    color: #6c757d;
+    margin-bottom: 3px;
+}
+
+.boletin-promedio-general__value {
+    font-size: 28px;
+    font-weight: bold;
+    color: #1a4b84;
+}
+
+.boletin-grades-empty {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+}
+
+.boletin-footer {
+    padding: 20px;
+    text-align: center;
+    background: #343a40;
+    color: white;
+    font-size: 12px;
+}
+
+.signature-section {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+    border-top: 2px solid #dee2e6;
+}
+
+.signature-box {
+    text-align: center;
+}
+
+.signature-line {
+    border-bottom: 2px solid #000;
+    margin: 30px 0 8px;
+    height: 2px;
+}
+
+.signature-label {
+    font-size: 12px;
+    color: #6c757d;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.watermark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    font-size: 120px;
+    color: rgba(26, 75, 132, 0.1);
+    z-index: -1;
+    pointer-events: none;
+}
+
+

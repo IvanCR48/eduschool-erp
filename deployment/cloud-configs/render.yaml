@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: sistema-admin
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    branch: main
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: DB_HOST
+        fromDatabase:
+          name: sistema-admin-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: sistema-admin-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: sistema-admin-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: sistema-admin-db
+          property: user
+      - key: DB_PASS
+        fromDatabase:
+          name: sistema-admin-db
+          property: password
+
+databases:
+  - name: sistema-admin-db
+    plan: free
+    region: oregon

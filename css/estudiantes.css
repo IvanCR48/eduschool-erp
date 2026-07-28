@@ -1,0 +1,262 @@
+/* Listado y formulario de estudiantes (estudiantes.php) */
+
+.estudiantes-section .alert-preceptor {
+    margin-bottom: 1rem;
+}
+
+.estudiantes-section .required {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.estudiantes-section .form-info {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 0.75rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.estudiantes-section .form-info p {
+    margin: 0;
+}
+
+.estudiantes-section .form-group label {
+    font-weight: 500;
+}
+
+.estudiantes-section .form-group input:invalid {
+    border-color: #dc3545;
+}
+
+.estudiantes-section .form-group input:valid {
+    border-color: #28a745;
+}
+
+.estudiantes-section .estudiantes-inline-form {
+    display: inline;
+}
+
+.estudiantes-section .acciones-estudiante {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.estudiantes-section .tabla-vacia {
+    padding: 2rem;
+    color: var(--secondary-color);
+    text-align: center;
+}
+
+.estudiantes-section .tabla-vacia__icono {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.3;
+}
+
+.estudiantes-section .alert-success {
+    animation: estudiantes-slide-in 0.3s ease-out;
+}
+
+@keyframes estudiantes-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =============================================
+   RESPONSIVE — Tablet (768px)
+   ============================================= */
+@media (max-width: 768px) {
+    .estudiantes-section .student-profile {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .estudiantes-section .profile-photo {
+        margin: 0 auto 1rem;
+    }
+
+    .estudiantes-section .student-info {
+        text-align: center;
+    }
+
+    .estudiantes-section .student-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .estudiantes-section .btn-text {
+        display: none;
+    }
+
+    .estudiantes-section .btn i {
+        margin-right: 0;
+    }
+
+    .estudiantes-section .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .estudiantes-section .table th,
+    .estudiantes-section .table td {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.8rem;
+    }
+
+    .estudiantes-section .table .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    /* Section header: stack title and buttons vertically */
+    .estudiantes-section .section-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .estudiantes-section .section-header h2 {
+        font-size: 1.35rem;
+        text-align: center;
+    }
+
+    .estudiantes-section .header-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .estudiantes-section .header-actions .btn {
+        flex: 1 1 auto;
+        min-width: 0;
+        justify-content: center;
+        font-size: 0.85rem;
+        padding: 0.6rem 1rem;
+    }
+
+    /* Stats grid: 2 columns */
+    .estudiantes-section .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Pagination */
+    .estudiantes-section .pagination-nav {
+        gap: 0.25rem !important;
+        padding: 0.75rem !important;
+    }
+
+    .estudiantes-section .pagination-nav .btn {
+        font-size: 0.75rem !important;
+        padding: 0.4rem 0.65rem !important;
+    }
+}
+
+/* =============================================
+   RESPONSIVE — Mobile (480px)
+   ============================================= */
+@media (max-width: 480px) {
+    .estudiantes-section .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .estudiantes-section .stat-card {
+        padding: 1rem;
+    }
+
+    .estudiantes-section .table th,
+    .estudiantes-section .table td {
+        padding: 0.25rem;
+        font-size: 0.75rem;
+    }
+
+    .estudiantes-section .btn {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .estudiantes-section .form-container {
+        padding: 0.75rem;
+    }
+
+    .estudiantes-section .form-row {
+        flex-direction: column;
+    }
+
+    .estudiantes-section .form-group {
+        width: 100%;
+    }
+
+    .estudiantes-section .section-header h2 {
+        font-size: 1.15rem;
+    }
+
+    .estudiantes-section .acciones-estudiante {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.35rem;
+        flex-wrap: wrap;
+    }
+
+    .estudiantes-section .acciones-estudiante .btn {
+        width: auto;
+        justify-content: center;
+    }
+}
+
+.status-especialidad {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.725rem;
+    font-weight: 600;
+    margin-top: 4px;
+    border: 1px solid transparent;
+}
+
+.status-esp-informatica {
+    background-color: #f3e8ff;
+    color: #6b21a8;
+    border-color: #e9d5ff;
+}
+
+.status-esp-electromecanica {
+    background-color: #fef3c7;
+    color: #92400e;
+    border-color: #fde68a;
+}
+
+.status-esp-construcciones {
+    background-color: #ffedd5;
+    color: #9a3412;
+    border-color: #fed7aa;
+}
+
+.status-esp-quimica {
+    background-color: #ccfbf1;
+    color: #0f766e;
+    border-color: #99f6e4;
+}
+
+.status-esp-basico {
+    background-color: #f1f5f9;
+    color: #475569;
+    border-color: #e2e8f0;
+}
+
+.status-esp-default {
+    background-color: #f8fafc;
+    color: #64748b;
+    border-color: #cbd5e1;
+}

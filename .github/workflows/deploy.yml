@@ -1,0 +1,278 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: sistema_admin_eest2_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, dom, fileinfo, mysql, pdo_mysql, gd, curl
+        coverage: xdebug
+        
+    - name: Install dependencies
+      run: composer install --no-dev --optimize-autoloader
+      
+    - name: Run unit tests
+      run: composer test-unit
+      env:
+        DB_HOST: 127.0.0.1
+        DB_NAME: sistema_admin_eest2_test
+        DB_USER: root
+        DB_PASS: root
+        
+    - name: Run integration tests
+      run: composer test-integration
+      env:
+        DB_HOST: 127.0.0.1
+        DB_NAME: sistema_admin_eest2_test
+        DB_USER: root
+        DB_PASS: root
+        
+    - name: Generate coverage report
+      run: composer test-coverage
+      env:
+        DB_HOST: 127.0.0.1
+        DB_NAME: sistema_admin_eest2_test
+        DB_USER: root
+        DB_PASS: root
+        
+    - name: Upload coverage reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: coverage/
+
+  security-scan:
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, dom, fileinfo, mysql, pdo_mysql
+        
+    - name: Install dependencies
+      run: composer install --no-dev --optimize-autoloader
+      
+    - name: PHP Security Checker
+      uses: symfonycorp/security-checker-action@v7
+      with:
+        lockfile: composer.lock
+        format: json
+        output: security-report.json
+        
+    - name: PHPStan Analysis
+      run: |
+        composer require --dev phpstan/phpstan
+        ./vendor/bin/phpstan analyse --level=8 src/ --no-progress
+        
+    - name: PHPCS Security Rules
+      run: |
+        composer require --dev squizlabs/php_codesniffer
+        ./vendor/bin/phpcs --standard=PSR12 --extensions=php src/
+        
+    - name: Dependency Vulnerability Scan
+      run: |
+        composer audit --locked --format=json > dependency-scan.json
+        
+    - name: Upload security reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-reports
+        path: |
+          security-report.json
+          dependency-scan.json
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: [test, security-scan]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event.inputs.environment == 'staging'
+    environment: staging
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, dom, fileinfo, mysql, pdo_mysql, gd, curl
+        
+    - name: Install dependencies
+      run: composer install --no-dev --optimize-autoloader
+      
+    - name: Create deployment package
+      run: |
+        zip -r deployment-package.zip . -x "*.git*" "*.github*" "tests/*" "docs/*" "*.md" "composer.json" "composer.lock" "phpunit.xml"
+        
+    - name: Deploy to staging server
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.STAGING_HOST }}
+        username: ${{ secrets.STAGING_USER }}
+        key: ${{ secrets.STAGING_SSH_KEY }}
+        script: |
+          cd /var/www/html/staging
+          # Backup current version
+          if [ -d "current" ]; then
+            mv current backup-$(date +%Y%m%d-%H%M%S)
+          fi
+          # Extract new version
+          unzip -q deployment-package.zip -d current
+          # Set permissions
+          chown -R www-data:www-data current/
+          chmod -R 755 current/
+          # Update database if needed
+          cd current
+          php database/migrate.php --environment=staging
+          # Restart services
+          sudo systemctl reload apache2
+          
+    - name: Run smoke tests on staging
+      run: |
+        curl -f ${{ secrets.STAGING_URL }}/health-check.php || exit 1
+        
+    - name: Notify staging deployment
+      uses: 8398a7/action-slack@v3
+      with:
+        status: success
+        text: "✅ Deploy to staging successful"
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: [test, security-scan]
+    if: github.event.inputs.environment == 'production'
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, dom, fileinfo, mysql, pdo_mysql, gd, curl
+        
+    - name: Install dependencies
+      run: composer install --no-dev --optimize-autoloader
+      
+    - name: Create deployment package
+      run: |
+        zip -r deployment-package.zip . -x "*.git*" "*.github*" "tests/*" "docs/*" "*.md" "composer.json" "composer.lock" "phpunit.xml"
+        
+    - name: Create production backup
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.PROD_HOST }}
+        username: ${{ secrets.PROD_USER }}
+        key: ${{ secrets.PROD_SSH_KEY }}
+        script: |
+          cd /var/www/html
+          # Create full backup before deployment
+          php backup/create_backup.php --type=pre-deployment
+          
+    - name: Deploy to production server
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.PROD_HOST }}
+        username: ${{ secrets.PROD_USER }}
+        key: ${{ secrets.PROD_SSH_KEY }}
+        script: |
+          cd /var/www/html
+          # Backup current version
+          if [ -d "current" ]; then
+            mv current backup-$(date +%Y%m%d-%H%M%S)
+          fi
+          # Extract new version
+          unzip -q deployment-package.zip -d current
+          # Set permissions
+          chown -R www-data:www-data current/
+          chmod -R 755 current/
+          # Update database if needed
+          cd current
+          php database/migrate.php --environment=production
+          # Restart services
+          sudo systemctl reload apache2
+          
+    - name: Run smoke tests on production
+      run: |
+        curl -f ${{ secrets.PROD_URL }}/health-check.php || exit 1
+        
+    - name: Notify production deployment
+      uses: 8398a7/action-slack@v3
+      with:
+        status: success
+        text: "🚀 Deploy to production successful"
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+  rollback:
+    runs-on: ubuntu-latest
+    if: failure()
+    needs: [deploy-staging, deploy-production]
+    
+    steps:
+    - name: Rollback deployment
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.PROD_HOST }}
+        username: ${{ secrets.PROD_USER }}
+        key: ${{ secrets.PROD_SSH_KEY }}
+        script: |
+          cd /var/www/html
+          # Find latest backup
+          LATEST_BACKUP=$(ls -t backup-* | head -n1)
+          if [ -n "$LATEST_BACKUP" ]; then
+            # Remove failed deployment
+            rm -rf current
+            # Restore from backup
+            mv $LATEST_BACKUP current
+            sudo systemctl reload apache2
+            echo "Rollback completed to $LATEST_BACKUP"
+          else
+            echo "No backup found for rollback"
+          fi
+          
+    - name: Notify rollback
+      uses: 8398a7/action-slack@v3
+      with:
+        status: warning
+        text: "⚠️ Deployment failed, rollback completed"
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}

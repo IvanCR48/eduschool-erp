@@ -1,0 +1,180 @@
+@startuml SistemaAdminOverview
+title Sistema Administrativo E.E.S.T. N°2 - Vista General
+
+skinparam backgroundColor white
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam ArrowColor #1f2937
+skinparam Component {
+    BackgroundColor #f8fafc
+    BorderColor #1d4ed8
+    FontSize 12
+}
+skinparam Package {
+    BackgroundColor #eef2ff
+    BorderColor #4338ca
+    FontStyle bold
+}
+
+package "Interfaz Web (PHP)" as UI {
+    component index_php as "index.php\nDashboard/Inicio"
+    component inicio_php as "public/inicio.php\nPortal principal"
+    component estudiantes_php as "estudiantes.php\nGestión Estudiantes"
+    component profesores_php as "profesores.php\nGestión Profesores"
+    component notas_php as "notas.php\nGestión Notas"
+    component horarios_php as "horarios.php\nHorarios"
+    component admin_tools_php as "admin/admin_tools.php\nHerramientas Admin"
+    component login_php as "public/login.php\nAutenticación"
+    component familia_login_php as "public/familia_login.php\nPortal Familias"
+    component google_login_php as "public/google_login.php\nOAuth Google"
+    component reportes_demo_php as "admin/reportes_demo.php\nReportes"
+}
+
+package "Capa Controladores (src/controllers)" as Controllers {
+    component DashboardController
+    component DashboardAnalyticsController
+    component EstudianteController
+    component ProfesorController
+    component HorariosController
+    component NotaController
+    component LlamadoController
+    component CursoController
+    component MateriaController
+    component MateriaPreviaController
+    component PreceptorCursosController
+    component EquipoDirectivoController
+    component NotasBoletinController
+    component EspecialidadController
+    component ReportesController
+    component AdminToolsController
+    component LoginController
+}
+
+package "Middleware (src/middleware)" as Middleware {
+    component SecurityMiddleware
+    component SecurityHeadersMiddleware
+    component SessionSecurityMiddleware
+    component FileSecurityMiddleware
+    component HTTPParameterPollutionProtectionMiddleware as HPPMiddleware
+    component InjectionProtectionMiddleware
+    component OpenRedirectProtectionMiddleware
+    component SSRFProtectionMiddleware
+    component TimingAttackProtectionMiddleware
+    component UploadSecurityMiddleware
+    component XXEProtectionMiddleware
+    component MonitoringMiddleware
+}
+
+package "Servicios (src/services)" as Services {
+    component ServicioSeguridad
+    component ServicioAutenticacion
+    component GoogleOAuthService
+    component SessionService
+    component PermissionService
+    component MFAService
+    component ServicioEstudiantes
+    component ServicioProfesores
+    component ServicioCursos
+    component ServicioMaterias
+    component ServicioMateriasPrevias
+    component ServicioPreceptorCursos
+    component ServicioBoletinNotas
+    component ServicioEquipoDirectivo
+    component ServicioEspecialidades
+    component ServicioReportes
+    component ExcelGeneratorService
+    component PDFGeneratorService
+    component ServicioHorarios
+    component ServicioNotas
+    component ServicioLlamados
+    component ServicioDashboardHome
+    component FileUploadService
+    component ServicioLogging
+    component SystemMonitoringService
+    component BackupService
+    component BackupSchedulerService
+    component RecaptchaService
+}
+
+package "Acceso Datos" as DataLayer {
+    component DatabaseAdapter
+    component PdoDatabase
+    component "Interfaces\n(src/interfaces)" as Contracts
+    component "Mappers\n(src/mappers)" as Mappers
+    component "Modelos\n(src/models)" as Models
+    component "DTOs\n(src/DTOs)" as DTOs
+}
+
+database MySQL as DB
+folder "Documentos / Exportaciones" as Storage
+folder "Respaldos" as Backups
+component "Bootstrap\n(src/Bootstrap/AppRequestInit.php)" as Bootstrap
+
+note right of Services
+  Servicios coordinan reglas de negocio,
+  validaciones y orquestación de datos.
+  Se apoyan en Mappers para acceder a MySQL.
+end note
+
+note bottom of Middleware
+  Cada request pasa por filtros de seguridad
+  (headers, sesiones, CSRF, uploads, SSRF, etc.)
+end note
+
+UI --> Controllers : Peticiones HTTP\n(POST/GET)
+UI --> Bootstrap : Inicializa request,\nsesión y entorno
+Controllers --> Middleware : Aplican filtros
+Middleware --> Services : Delegan validaciones\n+ lógica de seguridad
+Controllers --> Services : Reglas de negocio
+Services --> Mappers : Consultas y comandos\nsobre dominio
+Mappers --> PdoDatabase : Acceso persistencia
+PdoDatabase --> DatabaseAdapter : Implementación adapter
+DatabaseAdapter --> DB : Consultas SQL
+Services --> Models : Entidades de dominio
+Services --> DTOs : Transporte de datos
+Services --> FileUploadService : Maneja subidas
+FileUploadService --> Storage : Archivos seguros
+Services --> ServicioLogging : Auditoría y trazas
+ServicioLogging --> DB : Logs críticos
+Services --> ExcelGeneratorService : Genera XLS/CSV
+ExcelGeneratorService --> Storage : Exportaciones
+Services --> PDFGeneratorService : Genera PDF
+PDFGeneratorService --> Storage : Exportaciones
+ServicioAutenticacion --> MFAService : 2FA / TOTP
+ServicioSeguridad --> SecurityMiddleware
+SystemMonitoringService --> ServicioLogging : Métricas seguridad
+ReportesController --> ServicioReportes
+ServicioReportes --> ExcelGeneratorService
+ServicioReportes --> PDFGeneratorService
+
+LoginController --> ServicioAutenticacion
+ServicioAutenticacion --> GoogleOAuthService : Login federado
+ServicioAutenticacion --> SessionService : Gestión de sesión
+ServicioAutenticacion --> PermissionService : Validación de permisos
+ServicioAutenticacion --> ServicioSeguridad : Rate limiting, CSP
+ServicioAutenticacion --> SessionSecurityMiddleware
+
+DashboardAnalyticsController --> SystemMonitoringService
+DashboardController --> ServicioDashboardHome
+AdminToolsController --> SystemMonitoringService
+AdminToolsController --> ServicioLogging
+AdminToolsController --> BackupService
+BackupService --> Backups : Dumps/archivos
+BackupSchedulerService --> BackupService : Tareas programadas
+
+EstudianteController --> ServicioEstudiantes
+ProfesorController --> ServicioProfesores
+NotaController --> ServicioNotas
+HorariosController --> ServicioHorarios
+LlamadoController --> ServicioLlamados
+CursoController --> ServicioCursos
+MateriaController --> ServicioMaterias
+MateriaPreviaController --> ServicioMateriasPrevias
+PreceptorCursosController --> ServicioPreceptorCursos
+EquipoDirectivoController --> ServicioEquipoDirectivo
+NotasBoletinController --> ServicioBoletinNotas
+EspecialidadController --> ServicioEspecialidades
+
+@enduml
+

@@ -1,0 +1,265 @@
+/* Página: certificado de alumno/a regular — vista previa e impresión */
+
+.certificado-page-section {
+    max-width: 100%;
+}
+
+.certificado-intro {
+    margin-bottom: 1.25rem;
+    color: var(--secondary-color);
+    font-size: 0.95rem;
+}
+
+.certificado-preview-wrap {
+    background: var(--light-gray);
+    border: 1px solid var(--medium-gray);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+}
+
+.certificado-preview-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--secondary-color);
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.certificado-print-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+}
+
+.btn-cert-print {
+    font-size: 1.05rem;
+    padding: 0.85rem 1.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Papel del certificado (replica en blanco y negro, horizontal) */
+.certificado-papel {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1050px;
+    aspect-ratio: 297 / 210;
+    min-height: 320px;
+    background: #fff;
+    color: #000;
+    border: 1px solid #000;
+    border-radius: 14px;
+    padding: clamp(1rem, 2.5vw, 1.75rem) clamp(1.25rem, 3vw, 2.5rem);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11pt;
+    line-height: 1.35;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.certificado-header {
+    text-align: center;
+    margin-bottom: 0.75rem;
+}
+
+.certificado-header h1 {
+    font-size: clamp(0.95rem, 2.1vw, 1.2rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin: 0 0 0.35rem;
+    line-height: 1.2;
+}
+
+.certificado-header .certificado-escuela {
+    font-size: clamp(0.85rem, 1.6vw, 1rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.certificado-cuerpo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0;
+    padding-top: 0.25rem;
+}
+
+.certificado-row {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    margin-bottom: 0.5rem;
+    flex-wrap: nowrap;
+}
+
+.certificado-row .cert-txt {
+    flex-shrink: 0;
+    padding-right: 0.2em;
+}
+
+.certificado-row .cert-rule {
+    flex: 1;
+    min-width: 2rem;
+    border-bottom: 1px dotted #000;
+    min-height: 1.2em;
+    margin-bottom: 0.12em;
+}
+
+.certificado-row .cert-input {
+    border: none;
+    border-bottom: 1px dotted #000;
+    background: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    padding: 0 0.25rem;
+    color: #000;
+    transition: background 0.2s;
+}
+
+.certificado-row .cert-input:focus {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.certificado-row .cert-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position-x: 100%;
+    background-position-y: 2px;
+    padding-right: 1.5rem;
+}
+
+.certificado-row.cert-row-solo-rule {
+    margin-top: 0.1rem;
+}
+
+.certificado-row.cert-row-solo-rule .cert-rule {
+    width: 100%;
+}
+
+.certificado-par {
+    margin: 0 0 0.45rem;
+    padding: 0;
+}
+
+.certificado-row-fecha {
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0 0.15em;
+}
+
+.certificado-row-fecha .cert-rule-corto {
+    flex: 0 1 120px;
+    min-width: 72px;
+}
+
+.certificado-row-fecha .cert-rule-largo {
+    flex: 1 1 180px;
+    min-width: 120px;
+}
+
+.certificado-pie {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 1.25rem;
+    padding-top: 0.5rem;
+    gap: 2rem;
+}
+
+.certificado-sello {
+    font-weight: 700;
+    font-size: 11pt;
+    align-self: flex-end;
+    padding-bottom: 0.25rem;
+}
+
+.certificado-firma-bloque {
+    text-align: center;
+    flex: 0 1 280px;
+    max-width: 55%;
+}
+
+.certificado-firma-bloque .cert-rule {
+    width: 100%;
+    display: block;
+    border-bottom: 1px dotted #000;
+    min-height: 1.25em;
+    margin-bottom: 0.35rem;
+}
+
+.certificado-firma-bloque .cert-firma-label {
+    font-weight: 700;
+    font-size: 11pt;
+    margin: 0;
+}
+
+@media print {
+    @page {
+        size: landscape;
+        margin: 10mm;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: #fff !important;
+    }
+
+    .app-layout {
+        display: block !important;
+    }
+
+    .main-content {
+        max-width: none !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .certificado-preview-wrap {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .certificado-papel {
+        max-width: none;
+        width: 100%;
+        min-height: 0;
+        aspect-ratio: auto;
+        border-radius: 10px;
+        page-break-inside: avoid;
+        box-shadow: none;
+    }
+
+    .cert-input {
+        border-bottom: 1px solid transparent !important;
+    }
+    .cert-input[value=""]:placeholder-shown {
+        border-bottom: 1px dotted #000 !important;
+    }
+
+    .cert-select {
+        background-image: none !important;
+    }
+}

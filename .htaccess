@@ -1,0 +1,81 @@
+# Configuración de seguridad para Apache (versión compatible con XAMPP)
+
+# Prevenir acceso a archivos sensibles
+<Files ~ "^\.">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Proteger archivos de configuración
+<FilesMatch "\.(ini|conf|config|sql|log|bak|backup)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Mitigación pragmática: bloquear exposición de archivos internos/sensibles en raíz
+# Devuelve 403 Forbidden para extensiones no publicables.
+<FilesMatch "(?i)\.(md|bat|sh|phar|ini|env|sql|json|lock)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Proteger directorios sensibles usando RewriteRule
+RewriteEngine On
+
+# Redirecciones para URLs antiguas (compatibilidad)
+RewriteRule ^login\.php$ public/login.php [R=301,L]
+RewriteRule ^admin_tools\.php$ admin/admin_tools.php [R=301,L]
+RewriteRule ^health-check\.php$ public/health-check.php [R=301,L]
+RewriteRule ^inicio\.php$ public/inicio.php [R=301,L]
+
+# Redirecciones para directorio raíz
+# DESHABILITADO: Esta regla impide que index.php maneje la autenticación
+# RewriteRule ^$ public/login.php [L]
+
+# Bloquear acceso a carpetas sensibles (excepto documentación PHP)
+RewriteRule ^(src|config|database|tests|backups|logs|\.git)(/.*)?$ - [F,L]
+
+# Permitir acceso solo a archivos PHP de documentación
+RewriteRule ^docs/documentacion_completa/.*\.php$ - [L]
+RewriteRule ^docs/php/.*\.php$ - [L]
+
+# Bloquear acceso a otros archivos en docs
+RewriteRule ^docs/.*$ - [F,L]
+RewriteRule ^\.git - [F,L]
+RewriteRule ^composer\.(json|lock) - [F,L]
+RewriteRule ^phpunit\.xml - [F,L]
+RewriteRule ^\.env - [F,L]
+
+# Headers de seguridad básicos (solo si mod_headers está disponible)
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "DENY"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Error pages personalizadas
+ErrorDocument 403 /public/errors/error403.php
+ErrorDocument 404 /public/errors/error404.php
+ErrorDocument 500 /public/errors/error500.php
+
+# Limitar tamaño de archivos subidos (si está disponible)
+<IfModule mod_security.c>
+    SecRequestBodyLimit 10485760
+</IfModule>
+
+# Cache control básico para archivos estáticos
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+</IfModule>

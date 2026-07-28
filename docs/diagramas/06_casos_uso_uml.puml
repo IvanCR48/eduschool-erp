@@ -1,0 +1,63 @@
+@startuml
+title Diagrama de Casos de Uso UML - Sistema Administrativo Escolar
+left to right direction
+
+actor Profesor
+actor Preceptor
+actor "Equipo Directivo" as Directivo
+actor "Familia/Tutor" as Familia
+actor Admin
+
+rectangle "Sistema Administrativo E.E.S.T. N°2" {
+  usecase "Iniciar sesión\n(local / OAuth)" as UC1
+  usecase "Consultar dashboard" as UC2
+  usecase "Gestionar estudiantes\n(ABM datos personales)" as UC3
+  usecase "Gestionar profesores\n(ABM datos)" as UC4
+  usecase "Gestionar cursos y horarios" as UC5
+  usecase "Cargar notas manualmente" as UC6
+  usecase "Registrar llamados de atención" as UC7
+  usecase "Consultar boletines y notas\n(solo lectura)" as UC8
+  usecase "Emitir reportes y exportaciones" as UC9
+  usecase "Administrar sistema\n(seguridad, backups, logs)" as UC10
+  usecase "Acceder portal familias" as UC11
+  usecase "Gestionar materias previas" as UC12
+}
+
+Profesor --> UC1
+Profesor --> UC2
+Profesor --> UC6
+Profesor --> UC7
+Profesor --> UC8
+Profesor --> UC9
+
+Preceptor --> UC1
+Preceptor --> UC2
+Preceptor --> UC3
+Preceptor --> UC7
+Preceptor --> UC8
+
+Directivo --> UC1
+Directivo --> UC2
+Directivo --> UC8
+Directivo --> UC9
+
+Familia --> UC11
+Familia --> UC8
+
+Admin --> UC1
+Admin --> UC2
+Admin --> UC3
+Admin --> UC4
+Admin --> UC5
+Admin --> UC6
+Admin --> UC9
+Admin --> UC10
+Admin --> UC12
+
+note bottom
+  Las familias acceden por portal propio (no el login principal).
+  Solo Admin tiene permisos completos sobre todos los módulos.
+  Ningún actor externo puede cargar o modificar notas.
+end note
+
+@enduml

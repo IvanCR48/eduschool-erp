@@ -1,0 +1,42 @@
+@startuml
+title Activity Diagram - Carga Manual de Notas por Personal Autorizado
+
+|Usuario autorizado\n(Profesor / Admin)|
+start
+:Inicia sesión en el sistema;
+:Navega al módulo de Notas;
+:Selecciona curso y materia;
+:Selecciona alumno de la lista;
+
+|Sistema|
+:Verifica sesión activa y permisos del rol;
+if (Tiene permiso para cargar notas?) then (Sí)
+  :Muestra formulario de carga de nota;
+else (No)
+  :Rechaza con mensaje de acceso denegado;
+  stop
+endif
+
+|Usuario autorizado\n(Profesor / Admin)|
+:Ingresa la nota manualmente;
+:Envía el formulario;
+
+|Sistema|
+:Valida datos del formulario\n(rango de nota, campos obligatorios);
+if (Datos válidos?) then (Sí)
+  :Guarda nota en base de datos;
+  :Registra auditoría de la acción\n(quién, qué, cuándo);
+  :Muestra confirmación al usuario;
+else (No)
+  :Devuelve errores de validación;
+  :Permite corregir y reenviar;
+endif
+stop
+
+legend bottom
+  El sistema es un registro administrativo.
+  No existe entrega de actividades por parte de alumnos.
+  Las notas son ingresadas manualmente por personal con permiso.
+endlegend
+
+@enduml

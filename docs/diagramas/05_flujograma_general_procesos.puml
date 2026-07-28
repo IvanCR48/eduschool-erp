@@ -1,0 +1,32 @@
+@startuml
+title Flujograma General de Procesos - Sistema Educativo
+
+start
+:Usuario accede al sistema;
+:Login (credenciales locales u OAuth Google);
+if (Autenticación válida?) then (Sí)
+  :Cargar rol y permisos del usuario;
+  :Mostrar dashboard según perfil;
+  if (Rol con permisos de escritura?\nProfesor / Admin / Preceptor) then (Sí)
+    :Selecciona módulo (notas, llamados,\ncursos, horarios, estudiantes, etc.);
+    :Carga o modifica datos manualmente;
+    :Sistema valida permisos específicos del rol;
+    if (Operación permitida?) then (Sí)
+      :Persiste cambios en base de datos;
+      :Registra auditoría de la acción;
+      :Muestra confirmación al usuario;
+    else (No)
+      :Muestra error de permiso;
+    endif
+  else (No - solo lectura:\nDirectivo / Familia)
+    :Consulta información académica;
+    :Genera o descarga reporte si tiene permiso;
+  endif
+else (No)
+  :Bloquea acceso;
+  :Registra intento fallido (log de seguridad);
+  stop
+endif
+stop
+
+@enduml

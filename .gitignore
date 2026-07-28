@@ -1,0 +1,76 @@
+# =============================
+# Datos sensibles / artefactos
+# =============================
+
+# Logs
+*.log
+logs/*
+admin/logs/*
+public/logs/*
+
+# Mantener estructura de carpetas (sin contenido)
+!logs/.gitkeep
+!admin/logs/.gitkeep
+!public/logs/.gitkeep
+
+# Backups y artefactos de backup
+backups/*
+!backups/.gitkeep
+*.bak
+*.backup
+*.tmp
+*.zip
+*.enc
+
+# Archivos de configuración local
+.env
+.env.local
+.env.production
+env.php
+config/recaptcha.local.php
+config/google_oauth.local.php
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Directorios de cache
+cache/
+tmp/
+temp/
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Archivos de Composer
+vendor/
+composer.phar
+
+# Archivos de Node.js (si se usa)
+node_modules/
+npm-debug.log*
+
+# Scripts de desarrollo y pruebas
+scratch/
+
+# Archivos de base de datos
+*.sqlite
+*.db
+*.sql
+
+# Excepción explícita: base de datos inicial y migraciones
+!database/school_admin.sql
+!database/demo_data.sql
+!database/migrations/
+!database/migrations/**/*.sql
+
+# Archivos de sesión
+sessions/
+
+# Archivos de upload temporal
+uploads/temp/

@@ -1,0 +1,215 @@
+/* preceptor.php — preceptores-section: mismo patrón que estudiantes / profesores (.table, .table-container, .stats-grid) */
+
+.preceptores-section .course-tags .status {
+    margin: 0 0.25rem 0.25rem 0;
+}
+
+.preceptores-section .preceptor-alert--spaced {
+    margin-bottom: 1rem;
+}
+
+/* Estado vacío */
+.preceptores-section .preceptor-empty-card-body {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+}
+
+.preceptores-section .preceptor-empty-lead {
+    max-width: 28rem;
+    margin: 0.5rem auto 1.25rem;
+}
+
+.preceptores-section .preceptor-empty-icon {
+    width: 4.5rem;
+    height: 4.5rem;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    box-shadow: var(--shadow-lg);
+}
+
+.preceptores-section .preceptor-empty-title {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--text-color);
+}
+
+/* Panel “Gestionar” (details) */
+.preceptores-section .preceptor-details {
+    position: relative;
+}
+
+.preceptores-section .preceptor-details-summary {
+    list-style: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    user-select: none;
+}
+
+/* Acción principal: más peso que credenciales / dar de baja (btn-sm) */
+.preceptores-section .preceptor-manage-summary {
+    width: 100%;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.5rem 0.85rem;
+    min-height: 2.35rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+}
+
+.preceptores-section .preceptor-details[open] > .preceptor-manage-summary {
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.preceptores-section .preceptor-details-summary::-webkit-details-marker {
+    display: none;
+}
+
+.preceptores-section .preceptor-details-panel {
+    margin-top: 0.65rem;
+    padding: 1rem;
+    border-radius: var(--border-radius, 10px);
+    border: 1px solid var(--medium-gray, #e2e8f0);
+    background: #fff;
+    box-shadow: var(--shadow);
+    min-width: min(18rem, 92vw);
+    text-align: left;
+}
+
+.preceptores-section .preceptor-panel-block + .preceptor-panel-block {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--medium-gray, #e2e8f0);
+}
+
+.preceptores-section .preceptor-panel-title {
+    margin: 0 0 0.6rem;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--secondary-color, #64748b);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.preceptores-section .preceptor-panel-hint {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--secondary-color, #64748b);
+}
+
+.preceptores-section .preceptor-quitar-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.preceptores-section .preceptor-quitar-form {
+    display: inline;
+    margin: 0;
+}
+
+.preceptores-section .preceptor-btn-quitar {
+    background: #fef2f2 !important;
+    color: #b91c1c !important;
+    border: 1px solid #fecaca !important;
+}
+
+.preceptores-section .preceptor-btn-quitar:hover {
+    background: #fee2e2 !important;
+}
+
+.preceptores-section .preceptor-add-form {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.preceptores-section .preceptor-add-row {
+    margin: 0 !important;
+    align-items: flex-end;
+}
+
+.preceptores-section .preceptor-add-submit-wrap {
+    margin-bottom: 0;
+}
+
+.preceptores-section .preceptor-form-group-curso {
+    flex: 1;
+    min-width: 12rem;
+}
+
+.preceptores-section .preceptor-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Columna acciones: credenciales + gestionar + baja (espaciado) */
+.preceptores-section .preceptor-acciones-cell {
+    vertical-align: top;
+    min-width: 11rem;
+}
+
+.preceptores-section .preceptor-acciones-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+}
+
+.preceptores-section .preceptor-creds-btn {
+    width: 100%;
+    justify-content: center;
+}
+
+.preceptores-section .preceptor-creds-panel {
+    display: none;
+    margin-top: 0;
+    padding: 0.65rem 0.75rem;
+    border: 1px dashed var(--primary-color, #1a4b84);
+    border-radius: var(--border-radius, 10px);
+    background: #f0f4ff;
+    font-size: 0.82rem;
+}
+
+.preceptores-section .preceptor-creds-line {
+    display: block;
+}
+
+.preceptores-section .preceptor-creds-line + .preceptor-creds-line {
+    margin-top: 0.25rem;
+}
+
+.preceptores-section .preceptor-creds-hint {
+    display: block;
+    margin-top: 0.45rem;
+    color: var(--secondary-color, #64748b);
+    font-style: italic;
+    font-size: 0.78rem;
+}
+
+.preceptores-section .preceptor-creds-sin {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--secondary-color, #64748b);
+    font-style: italic;
+}
+
+.preceptores-section .preceptor-btn-baja {
+    width: 100%;
+    justify-content: center;
+}

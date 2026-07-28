@@ -1,0 +1,1530 @@
+/* --- Perfil y layout ficha --- */
+.ficha-estudiante .student-profile {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.ficha-estudiante .profile-photo {
+    flex-shrink: 0;
+}
+
+.ficha-estudiante .profile-photo img,
+.ficha-estudiante .default-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--primary-color);
+}
+
+.ficha-estudiante .default-photo {
+    background: var(--light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: var(--secondary-color);
+}
+
+.ficha-estudiante .profile-info h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.ficha-estudiante .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.ficha-estudiante .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.ficha-estudiante .info-item strong {
+    color: var(--text-color);
+    font-size: 0.875rem;
+}
+
+.ficha-estudiante .info-item span {
+    color: var(--secondary-color);
+}
+
+.ficha-estudiante .contact-info {
+    border-top: 1px solid var(--medium-gray);
+    padding-top: 2rem;
+}
+
+.ficha-estudiante .contact-info h4 {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    font-size: 1.125rem;
+}
+
+.ficha-estudiante .header-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Grillas de sección */
+.ficha-grid {
+    display: grid;
+    gap: 2rem;
+}
+
+.ficha-grid--1 {
+    grid-template-columns: 1fr;
+}
+
+.ficha-grid--2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+/* Tarjetas responsables / contactos */
+.ficha-persona-card {
+    padding: 1rem;
+    border: 1px solid var(--medium-gray);
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.ficha-persona-card__actions {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+}
+
+.ficha-persona-card__title {
+    margin-bottom: 0.5rem;
+    padding-right: 2.5rem;
+}
+
+.ficha-persona-card__grid {
+    font-size: 0.875rem;
+}
+
+.ficha-badge-emergencia {
+    font-size: 0.75rem;
+    margin-left: 0.35rem;
+}
+
+.ficha-card-header-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.ficha-card-header-row .btn {
+    margin-left: auto;
+}
+
+/* Alertas de progreso unificadas */
+.ficha-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    border: none;
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+.ficha-alert__icon {
+    font-size: 1.2em;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+}
+
+.ficha-alert__text {
+    flex: 1;
+    line-height: 1.45;
+}
+
+.ficha-alert__text--row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.ficha-alert__btn-curso {
+    margin-left: 0;
+}
+
+.ficha-alert--success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.ficha-alert--info {
+    background: linear-gradient(135deg, #17a2b8, #6f42c1);
+}
+
+.ficha-alert--warning {
+    background: linear-gradient(135deg, #ffc107, #fd7e14);
+}
+
+.ficha-alert--curso {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+}
+
+/* Boletín header / vacío */
+.ficha-boletin-card__header {
+    padding: 1.5rem;
+}
+
+.ficha-boletin-card__header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.ficha-boletin-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ficha-boletin-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.ficha-boletin-empty__icon {
+    font-size: 3rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.ficha-boletin-empty__title {
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+.ficha-boletin-empty__text {
+    color: var(--secondary-color);
+    margin-bottom: 1.5rem;
+}
+
+/* Boletín tabla */
+.boletin-estudiante-container {
+    overflow-x: auto;
+    margin: 20px 0;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    padding: 3px;
+}
+
+.boletin-estudiante-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.boletin-estudiante-table th,
+.boletin-estudiante-table td {
+    border: none;
+    padding: 12px 8px;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+}
+
+.boletin-estudiante-table th {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: white;
+    font-weight: 700;
+    font-size: 0.9em;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.materia-header {
+    text-align: left !important;
+    min-width: 180px;
+}
+
+.cuatrimestre-header {
+    min-width: 100px;
+}
+
+.promedio-header {
+    min-width: 100px;
+    background: linear-gradient(135deg, #065f46 0%, #064e3b 100%) !important;
+}
+
+.estado-header {
+    min-width: 120px;
+}
+
+.materia-cell {
+    text-align: left !important;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    font-weight: 600;
+    color: #495057;
+    border-right: 2px solid #dee2e6;
+    position: sticky;
+    left: 0;
+    z-index: 5;
+}
+
+.nota-cell {
+    padding: 8px 4px !important;
+    background: white;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.nota-cell:hover {
+    background: linear-gradient(135deg, #f0f4ff 0%, #dbeafe 100%);
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(30, 58, 138, 0.15);
+}
+
+.promedio-cell {
+    padding: 8px 4px !important;
+    background: linear-gradient(135deg, rgba(6, 95, 70, 0.1) 0%, rgba(6, 78, 59, 0.1) 100%);
+    border-left: 2px solid #065f46;
+    border-right: 2px solid #065f46;
+    font-weight: 700;
+}
+
+.promedio-cell:hover {
+    background: linear-gradient(135deg, rgba(6, 95, 70, 0.15) 0%, rgba(6, 78, 59, 0.15) 100%);
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(6, 95, 70, 0.2);
+}
+
+.estado-cell {
+    padding: 8px 4px !important;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.nota-value {
+    font-weight: 700;
+    font-size: 1.1em;
+    color: #495057;
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-width: 40px;
+    transition: all 0.3s ease;
+}
+
+.promedio-value {
+    font-weight: 800;
+    font-size: 1.2em;
+    color: #065f46;
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(6, 95, 70, 0.1) 0%, rgba(6, 78, 59, 0.1) 100%);
+    min-width: 50px;
+    border: 2px solid #065f46;
+    box-shadow: 0 2px 8px rgba(6, 95, 70, 0.2);
+}
+
+.promedio-pendiente {
+    font-weight: 600;
+    font-size: 0.9em;
+    color: #6c757d;
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    font-style: italic;
+}
+
+.estado {
+    font-weight: 700;
+    font-size: 0.9em;
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.estado.aprobado {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+}
+
+.estado.reprobado {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.estado.pendiente {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+.boletin-estudiante-table tbody tr {
+    transition: all 0.3s ease;
+    animation: fichaFadeInRow 0.5s ease-out;
+}
+
+.boletin-estudiante-table tbody tr:hover {
+    background: linear-gradient(135deg, #f0f4ff 0%, #dbeafe 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.1);
+}
+
+.boletin-estudiante-table tbody tr:hover .materia-cell {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+}
+
+.boletin-estudiante-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.boletin-estudiante-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.boletin-estudiante-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border-radius: 4px;
+}
+
+.boletin-estudiante-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+}
+
+/* Subsecciones dentro de la misma card del boletín (intensif., previas) */
+.ficha-boletin-subsection {
+    border-top: 1px solid #e2e8f0;
+    padding: 1.25rem 1.5rem 1.35rem;
+    background: #fafbfc;
+}
+
+.ficha-intensif-section__head {
+    margin-bottom: 0.85rem;
+}
+
+.ficha-intensif-section__title {
+    margin: 0 0 0.35rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.ficha-intensif-section__meta {
+    margin: 0;
+    font-size: 0.82rem;
+    color: #64748b;
+    line-height: 1.45;
+}
+
+.ficha-intensif-table-wrap {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+}
+
+.ficha-intensif-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.ficha-intensif-table th {
+    text-align: left;
+    padding: 0.55rem 0.75rem;
+    background: #f1f5f9;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.ficha-intensif-table td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+    vertical-align: top;
+}
+
+.ficha-intensif-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.ficha-intensif-table__mat {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.ficha-intensif-table__nota {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    color: #0f766e;
+}
+
+.ficha-intensif-table__fecha {
+    font-variant-numeric: tabular-nums;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+/* Materias previas: panel aparte del boletín principal (sin misma “caja” oscura) */
+.ficha-previas-panel {
+    border-top: 1px solid #e2e8f0;
+    padding: 1.25rem 1.5rem 1.5rem;
+    background: linear-gradient(180deg, #fffefb 0%, #faf8f5 100%);
+}
+
+.ficha-previas-panel__title {
+    margin: 0 0 0.35rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #78350f;
+}
+
+.ficha-previas-panel__hint {
+    margin: 0 0 1rem;
+    font-size: 0.8rem;
+    color: #92400e;
+    opacity: 0.9;
+}
+
+.ficha-previas-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.ficha-previas-item {
+    border: 1px solid #e7e5e4;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.ficha-previas-item__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.ficha-previas-item__materia {
+    font-weight: 600;
+    color: #1c1917;
+    font-size: 0.95rem;
+}
+
+.ficha-previas-pill {
+    display: inline-block;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.ficha-previas-pill--ok {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.ficha-previas-pill--reg {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.ficha-previas-pill--pend {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.ficha-previas-pill--rep {
+    background: #fecaca;
+    color: #7f1d1d;
+}
+
+.ficha-previas-item__meta--compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.25rem 1rem;
+}
+
+.ficha-previas-approve-form {
+    margin-top: 0.65rem;
+}
+
+.ficha-previas-approve-form .ficha-previas-approve-btn {
+    margin-top: 0;
+}
+
+.ficha-previas-item__meta {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.35rem 0.75rem;
+    margin: 0;
+    font-size: 0.82rem;
+}
+
+.ficha-previas-item__meta dt {
+    margin: 0;
+    font-weight: 600;
+    color: #78716c;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.ficha-previas-item__meta dd {
+    margin: 0.1rem 0 0;
+    color: #44403c;
+    font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+    .ficha-previas-item__meta {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* ======================================================
+   Materias en Cursada Dirigida / Recursadas — Sección Premium
+   ====================================================== */
+
+.ficha-recursadas-panel {
+    margin-top: 2rem;
+    border-top: 2px solid #64748b;
+    padding-top: 0;
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 0 0 14px 14px;
+}
+
+.ficha-recursadas-panel__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem 1rem;
+    background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+    border-radius: 0;
+}
+
+.ficha-recursadas-panel__header-icon {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.1rem;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12);
+    animation: ficha-rec-pulse 3s ease-in-out infinite;
+}
+
+@keyframes ficha-rec-pulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12); }
+    50%       { box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.06); }
+}
+
+.ficha-recursadas-panel__title {
+    margin: 0 0 0.2rem;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.01em;
+}
+
+.ficha-recursadas-panel__hint {
+    margin: 0;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.45;
+}
+
+/* List of recursada cards */
+.ficha-recursadas-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem 0.5rem;
+}
+
+.ficha-rec-card {
+    display: flex;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(71, 85, 105, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(71, 85, 105, 0.14);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    animation: ficha-rec-slide-in 0.45s ease-out both;
+}
+
+@keyframes ficha-rec-slide-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0);    }
+}
+
+.ficha-rec-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(71, 85, 105, 0.15), 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.ficha-rec-card__accent {
+    width: 5px;
+    flex-shrink: 0;
+    background: linear-gradient(180deg, #475569 0%, #1e293b 100%);
+    border-radius: 0;
+}
+
+.ficha-rec-card__body {
+    flex: 1;
+    padding: 0.85rem 1rem 0.85rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.ficha-rec-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.ficha-rec-card__name-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ficha-rec-card__book-icon {
+    color: #475569;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.ficha-rec-card__materia {
+    font-weight: 700;
+    font-size: 0.97rem;
+    color: #1e1b4b;
+}
+
+.ficha-rec-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.22rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: linear-gradient(135deg, #475569 0%, #1e293b 100%);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(71, 85, 105, 0.3);
+    white-space: nowrap;
+}
+
+.ficha-rec-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+}
+
+.ficha-rec-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    color: #4b5563;
+}
+
+.ficha-rec-meta-item i {
+    color: #475569;
+    font-size: 0.78rem;
+}
+
+.ficha-rec-btn-eliminar {
+    margin-top: 0.4rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.28rem 0.75rem;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    background: rgba(254, 226, 226, 0.6);
+    color: #991b1b;
+    font-size: 0.72rem;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    line-height: 1;
+}
+
+.ficha-rec-btn-eliminar:hover {
+    background: #fecaca;
+    border-color: #ef4444;
+    transform: scale(1.04);
+}
+
+/* Empty state */
+.ficha-recursadas-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 2rem 1.5rem;
+    text-align: center;
+}
+
+.ficha-recursadas-empty__icon {
+    font-size: 2.2rem;
+    color: #cbd5e1;
+    opacity: 0.7;
+}
+
+.ficha-recursadas-empty__text {
+    font-size: 0.88rem;
+    color: #6b7280;
+    font-style: italic;
+    margin: 0;
+}
+
+/* Form to add a new recursada */
+.ficha-recursadas-form-wrap {
+    margin: 1rem 1.5rem 1.5rem;
+    background: rgba(71, 85, 105, 0.04);
+    border: 1.5px dashed rgba(71, 85, 105, 0.3);
+    border-radius: 10px;
+    padding: 1.1rem 1.25rem;
+}
+
+.ficha-recursadas-form-wrap__label {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.9rem;
+}
+
+.ficha-recursadas-form__fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 0.75rem;
+    align-items: end;
+}
+
+.ficha-recursadas-form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.ficha-recursadas-form__field-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.ficha-recursadas-form__select {
+    padding: 0.5rem 0.65rem;
+    border: 1.5px solid rgba(71, 85, 105, 0.25);
+    border-radius: 8px;
+    background: #fff;
+    color: #1e1b4b;
+    font-size: 0.85rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    width: 100%;
+}
+
+.ficha-recursadas-form__select:focus {
+    border-color: #475569;
+    box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.12);
+}
+
+.ficha-recursadas-form__select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ficha-recursadas-form__submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1.2rem;
+    background: linear-gradient(135deg, #475569 0%, #1e293b 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.83rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 3px 10px rgba(71, 85, 105, 0.25);
+}
+
+.ficha-recursadas-form__submit:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 16px rgba(71, 85, 105, 0.35);
+}
+
+@media (max-width: 640px) {
+    .ficha-recursadas-form__fields {
+        grid-template-columns: 1fr;
+    }
+
+    .ficha-recursadas-panel__header {
+        flex-direction: column;
+    }
+
+    .ficha-recursadas-list,
+    .ficha-recursadas-form-wrap {
+        margin-left: 0.75rem;
+        margin-right: 0.75rem;
+    }
+}
+
+@keyframes fichaFadeInRow {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Formularios en modal */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-color);
+}
+
+.form-container h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+}
+
+.ficha-muted {
+    color: var(--secondary-color);
+}
+
+.ficha-help {
+    color: var(--secondary-color);
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+}
+
+/* Modales ficha */
+.modal.modal--ficha {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    animation: fichaModalBackdropFadeIn 0.3s ease-out;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 2% auto;
+    padding: 0;
+    border-radius: 12px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: fichaModalSlideIn 0.3s ease-out;
+    position: relative;
+}
+
+.modal-content--narrow {
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-content--curso {
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-content--edit {
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.close {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    line-height: 1;
+    text-align: center;
+}
+
+.close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.modal-warn {
+    color: #dc3545;
+    font-size: 0.9rem;
+}
+
+.modal-curso-info {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal-curso-info h4 {
+    color: #856404;
+    margin: 0 0 0.5rem 0;
+}
+
+.modal-curso-info ul {
+    color: #856404;
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.modal-form-actions {
+    margin-top: 1.5rem;
+}
+
+.modal-form-actions__buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+@keyframes fichaModalBackdropFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fichaModalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.btn-eliminar {
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.btn-eliminar:hover {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    transform: scale(1.1);
+}
+
+.btn-outline-light {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: white;
+    color: white;
+}
+
+/* Pestañas modal edición */
+.ficha-edit-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 2px solid var(--medium-gray);
+}
+
+.ficha-edit-tabs__btn {
+    padding: 0.6rem 1rem;
+    border: none;
+    background: transparent;
+    color: var(--secondary-color);
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: -2px;
+}
+
+.ficha-edit-tabs__btn:hover {
+    color: var(--primary-color);
+    background: rgba(30, 58, 138, 0.06);
+}
+
+.ficha-edit-tabs__btn.is-active {
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--primary-color);
+    background: rgba(30, 58, 138, 0.08);
+}
+
+.ficha-edit-panel {
+    display: none;
+}
+
+.ficha-edit-panel.is-active {
+    display: block;
+}
+
+.text-center-muted {
+    color: var(--secondary-color);
+    padding: 2rem;
+    text-align: center;
+}
+
+/* ======================================================
+   Ficha estudiante — Reporte acumulado de asistencia
+   ====================================================== */
+.ficha-asistencia-card {
+    border: 1px solid #dbe4ef;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.ficha-asistencia-card .card-header {
+    background: linear-gradient(180deg, #f8fbff 0%, #f3f7fc 100%);
+    border-bottom: 1px solid #dbe4ef;
+}
+
+.ficha-asistencia-card .card-title {
+    color: #1e3a5f;
+    letter-spacing: 0.01em;
+}
+
+.ficha-asistencia-filtros {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    flex-wrap: wrap;
+}
+
+.ficha-asistencia-filtros__label {
+    font-size: .8rem;
+    color: #4b6280;
+    font-weight: 600;
+}
+
+.ficha-asistencia-filtros__select {
+    min-width: 160px;
+    padding: .38rem .6rem;
+    border: 1px solid #c7d6e8;
+    border-radius: 8px;
+    background: #fff;
+    color: #1f3552;
+}
+
+.ficha-asistencia-resumen {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: .8rem;
+    margin: .25rem 0 1.2rem;
+}
+
+.far-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .25rem;
+    padding: .85rem 1rem;
+    border-radius: 12px;
+    min-height: 84px;
+    border: 1px solid #dbe4ef;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.far-value {
+    display: block;
+    font-size: 1.55rem;
+    font-weight: 800;
+    line-height: 1;
+    color: #12365c;
+}
+
+.far-label {
+    display: block;
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    white-space: nowrap;
+    color: #5b708a;
+}
+
+.far-item--total {
+    background: linear-gradient(180deg, #eef4fb 0%, #e5edf7 100%);
+    color: #1e3a5f;
+    border: 1px solid #bfd0e4;
+    grid-column: span 2;
+}
+
+.far-item--total .far-label {
+    color: #3f5977;
+}
+
+.far-rate {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: .35rem .8rem;
+    background: #1f3552;
+    color: #ffffff;
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: .01em;
+}
+
+.ficha-asistencia-subtitle {
+    margin: 1rem 0 .6rem;
+    font-size: .92rem;
+    color: #3e5a7a;
+    font-weight: 600;
+}
+
+.ficha-asistencia-card .table-container {
+    border: 1px solid #d6e0ec;
+    border-radius: 14px;
+    overflow-x: auto;
+    background: #ffffff;
+}
+
+.ficha-asistencia-table thead th {
+    background: #1f3552;
+    color: #f8fbff;
+    border-bottom: 1px solid #1a2d45;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    padding: .7rem .8rem;
+}
+
+.ficha-asistencia-table tbody td {
+    border-bottom: 1px solid #edf2f7;
+    color: #334155;
+    padding: .62rem .8rem;
+}
+
+.ficha-asistencia-table tbody tr:nth-child(even) {
+    background: #fbfdff;
+}
+
+.ficha-asistencia-table tbody tr:hover {
+    background: #f4f9ff;
+}
+
+.ficha-asistencia-table tbody td:first-child {
+    color: #2b4666;
+    font-weight: 600;
+}
+
+.ficha-asistencia-card .av-cnt {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 700;
+    padding: .2rem .65rem;
+    border: none;
+    white-space: nowrap;
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.06);
+}
+
+.ficha-asistencia-card .av-cnt--ok {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.ficha-asistencia-card .av-cnt--warn {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.ficha-asistencia-card .av-cnt--info {
+    background: #ffedd5;
+    color: #9a3412;
+}
+
+.ficha-asistencia-card .av-cnt--prim {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.ficha-asistencia-card .av-cnt--danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .ficha-grid--2 {
+        grid-template-columns: 1fr;
+    }
+
+    .ficha-estudiante .student-profile {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .ficha-estudiante .profile-photo {
+        margin: 0 auto 1rem;
+    }
+
+    .ficha-estudiante .header-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .ficha-estudiante .header-actions .btn {
+        flex: 1 1 auto;
+        min-width: 120px;
+        justify-content: center;
+    }
+
+    .ficha-estudiante .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ficha-estudiante .info-item {
+        align-items: center;
+        text-align: center;
+    }
+
+    .ficha-asistencia-resumen {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+    }
+
+    .far-item--total {
+        grid-column: span 2;
+    }
+
+    .boletin-estudiante-table th,
+    .boletin-estudiante-table td {
+        padding: 8px 4px;
+        font-size: 0.85em;
+    }
+
+    .materia-header {
+        min-width: 120px;
+    }
+
+    .cuatrimestre-header,
+    .promedio-header {
+        min-width: 80px;
+    }
+
+    .estado-header {
+        min-width: 100px;
+    }
+
+    .nota-value {
+        font-size: 1em;
+        min-width: 35px;
+        padding: 3px 6px;
+    }
+
+    .promedio-value {
+        font-size: 1.1em;
+        min-width: 40px;
+        padding: 4px 8px;
+    }
+
+    .estado {
+        font-size: 0.8em;
+        padding: 4px 8px;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+        max-height: 95vh;
+    }
+
+    .modal-header {
+        padding: 1rem 1.5rem;
+    }
+
+    .modal-header h3 {
+        font-size: 1.25rem;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .ficha-edit-tabs__btn {
+        flex: 1 1 auto;
+        min-width: 0;
+        font-size: 0.85rem;
+        padding: 0.5rem 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 0.5rem;
+    }
+
+    .ficha-estudiante .card {
+        padding: 0.75rem;
+    }
+
+    .ficha-estudiante .btn {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .ficha-estudiante .table th,
+    .ficha-estudiante .table td {
+        padding: 0.25rem;
+        font-size: 0.75rem;
+    }
+
+    .form-container {
+        padding: 0.75rem;
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    .modal.modal--ficha {
+        padding: 1rem;
+    }
+
+    .modal-content {
+        margin: 1rem;
+        max-width: calc(100% - 2rem);
+    }
+}

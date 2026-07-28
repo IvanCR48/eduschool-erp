@@ -1,0 +1,88 @@
+@startuml
+title Diagrama ER - Base de Datos (visión funcional)
+
+entity usuarios {
+  * id_usuario : int <<PK>>
+  --
+  email : varchar
+  password_hash : varchar
+  rol : varchar
+  estado : tinyint
+}
+
+entity estudiantes {
+  * id_estudiante : int <<PK>>
+  --
+  id_usuario : int <<FK>>
+  nombre : varchar
+  apellido : varchar
+  dni : varchar
+}
+
+entity profesores {
+  * id_profesor : int <<PK>>
+  --
+  id_usuario : int <<FK>>
+  nombre : varchar
+  apellido : varchar
+}
+
+entity cursos {
+  * id_curso : int <<PK>>
+  --
+  nombre : varchar
+  anio : int
+  division : varchar
+}
+
+entity materias {
+  * id_materia : int <<PK>>
+  --
+  nombre : varchar
+  id_curso : int <<FK>>
+}
+
+entity notas {
+  * id_nota : int <<PK>>
+  --
+  id_estudiante : int <<FK>>
+  id_materia : int <<FK>>
+  id_profesor : int <<FK>>
+  valor : decimal
+  fecha : date
+}
+
+entity llamados {
+  * id_llamado : int <<PK>>
+  --
+  id_estudiante : int <<FK>>
+  id_profesor : int <<FK>>
+  motivo : text
+  fecha : datetime
+}
+
+entity logs_seguridad {
+  * id_log : int <<PK>>
+  --
+  id_usuario : int <<FK>>
+  evento : varchar
+  nivel : varchar
+  fecha : datetime
+}
+
+usuarios ||--o{ estudiantes
+usuarios ||--o{ profesores
+cursos ||--o{ materias
+estudiantes ||--o{ notas
+materias ||--o{ notas
+profesores ||--o{ notas
+estudiantes ||--o{ llamados
+profesores ||--o{ llamados
+usuarios ||--o{ logs_seguridad
+
+note bottom
+  Modelo conceptual basado en módulos existentes.
+  Ajustar nombres/campos finales según esquema SQL real.
+end note
+
+@enduml

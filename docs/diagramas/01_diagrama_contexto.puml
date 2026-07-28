@@ -1,0 +1,62 @@
+@startuml
+title Sistema Administrativo E.E.S.T. N°2 - Diagrama de Contexto
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam actorStyle awesome
+skinparam rectangle {
+  BackgroundColor #eef2ff
+  BorderColor #4338ca
+}
+
+actor Profesor
+actor Preceptor
+actor "Equipo Directivo" as Directivo
+actor "Familia/Tutor" as Familia
+actor Admin
+actor "Google OAuth" as Google
+
+rectangle "Sistema Administrativo Escolar" as Sistema {
+  usecase "Autenticación y acceso" as UCAuth
+  usecase "Carga y gestión académica\n(notas, llamados, cursos, horarios)" as UCAcademico
+  usecase "Consulta de información académica\n(solo lectura)" as UCConsulta
+  usecase "Reportes y exportaciones" as UCReportes
+  usecase "Portal familias" as UCFamilias
+  usecase "Administración del sistema" as UCSistema
+}
+
+database "MySQL" as DB
+folder "Archivos y exportaciones" as Storage
+
+Profesor --> UCAuth
+Profesor --> UCAcademico
+Profesor --> UCConsulta
+
+Preceptor --> UCAuth
+Preceptor --> UCAcademico
+Preceptor --> UCConsulta
+
+Directivo --> UCAuth
+Directivo --> UCConsulta
+Directivo --> UCReportes
+
+Familia --> UCFamilias
+Familia --> UCConsulta
+
+Admin --> UCAuth
+Admin --> UCAcademico
+Admin --> UCReportes
+Admin --> UCSistema
+
+Google --> UCAuth
+
+Sistema --> DB
+Sistema --> Storage
+
+note bottom
+  Los alumnos no inician sesión en el sistema administrativo.
+  Sus datos son gestionados por el personal autorizado.
+  Las familias acceden mediante portal propio (familia_login.php).
+end note
+
+@enduml

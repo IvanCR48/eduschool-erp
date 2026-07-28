@@ -1,0 +1,52 @@
+# Archivos de desarrollo
+.git
+.gitignore
+README.md
+docs/
+tests/
+phpunit.xml
+composer.lock
+
+# Archivos de configuración local
+.env
+.env.local
+.env.production
+
+# Archivos de logs
+logs/*.log
+*.log
+
+# Archivos temporales
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Archivos de backup
+backups/
+*.sql
+*.zip
+*.tar.gz
+
+# Archivos de configuración de desarrollo
+config/production.php
+bin/
+
+# Archivos de Windows
+Thumbs.db
+Desktop.ini

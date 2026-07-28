@@ -1,0 +1,71 @@
+@startuml
+title Diagrama de Clases UML - Nucleo del Sistema\n(carga de datos es siempre manual por rol autorizado)
+
+skinparam classAttributeIconSize 0
+
+class LoginController
+class EstudianteController
+class ProfesorController
+class NotaController
+class ReportesController
+class UsuarioController
+
+class ServicioAutenticacion
+class ServicioEstudiantes
+class ServicioProfesores
+class ServicioNotas
+class ServicioReportes
+class ServicioSeguridad
+class MFAService
+class GoogleOAuthService
+class ExcelGeneratorService
+class PDFGeneratorService
+
+class EstudianteMapper
+class ProfesorMapper
+class NotaMapper
+class CursoMapper
+class UsuarioMapper
+class DatabaseAdapter
+class PdoDatabase
+
+class Estudiante
+class Profesor
+class Usuario
+class DTO
+
+LoginController --> ServicioAutenticacion
+EstudianteController --> ServicioEstudiantes
+ProfesorController --> ServicioProfesores
+NotaController --> ServicioNotas
+ReportesController --> ServicioReportes
+UsuarioController --> UsuarioMapper
+
+ServicioAutenticacion --> ServicioSeguridad
+ServicioAutenticacion --> MFAService
+ServicioAutenticacion --> GoogleOAuthService
+ServicioReportes --> ExcelGeneratorService
+ServicioReportes --> PDFGeneratorService
+
+ServicioEstudiantes --> EstudianteMapper
+ServicioProfesores --> ProfesorMapper
+ServicioNotas --> NotaMapper
+ServicioNotas --> CursoMapper
+
+EstudianteMapper --> PdoDatabase
+ProfesorMapper --> PdoDatabase
+NotaMapper --> PdoDatabase
+UsuarioMapper --> PdoDatabase
+PdoDatabase --> DatabaseAdapter
+
+ServicioEstudiantes --> Estudiante
+ServicioProfesores --> Profesor
+UsuarioMapper --> Usuario
+ServicioReportes --> DTO
+
+note bottom
+  Diagrama intencionalmente resumido para mantenimiento.
+  Puede ampliarse por módulo si se requiere granularidad completa.
+end note
+
+@enduml

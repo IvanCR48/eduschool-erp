@@ -1,0 +1,32 @@
+@startuml
+title Diagrama de Secuencia - Carga Manual de Nota
+
+actor "Profesor / Admin" as Usuario
+participant "UI Web\n(formulario notas)" as UI
+participant "NotaController" as C
+participant "SecurityMiddleware" as M
+participant "PermissionService" as P
+participant "ServicioNotas" as S
+participant "NotaMapper" as Mapper
+database MySQL as DB
+participant "ServicioLogging" as Log
+
+Usuario -> UI : Completa formulario de nota\n(alumno, materia, valor)
+UI -> C : POST /notas
+C -> M : validar request (sesión, CSRF, headers)
+M --> C : OK
+C -> P : verificar permiso de escritura de notas
+P --> C : permiso confirmado
+C -> S : registrarNota(alumno, materia, valor, usuario)
+S -> Mapper : guardarNota(datos)
+Mapper -> DB : INSERT / UPDATE nota
+DB --> Mapper : resultado OK
+Mapper --> S : nota persistida
+S -> Log : registrarAuditoria(usuario, accion, timestamp)
+Log -> DB : INSERT log_seguridad
+Log --> S : OK
+S --> C : éxito
+C --> UI : respuesta 200 + mensaje de confirmación
+UI --> Usuario : muestra confirmación visual
+
+@enduml

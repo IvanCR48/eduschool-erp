@@ -1,0 +1,324 @@
+/* profesor_ficha.php — modal edición, perfil y utilidades */
+
+/* ── Modal edición ── */
+.profesor-ficha-modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+}
+
+.profesor-ficha-modal__content {
+    background-color: #fff;
+    margin: 3% auto;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 860px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.profesor-ficha-modal__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    color: #fff;
+    border-radius: 12px 12px 0 0;
+}
+
+.profesor-ficha-modal__header h3 {
+    margin: 0;
+}
+
+.profesor-ficha-modal__close {
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0.2rem 0.5rem;
+}
+
+.profesor-ficha-modal__body {
+    padding: 1.5rem;
+}
+
+.profesor-ficha-card__action-spaced {
+    margin-left: 1rem;
+}
+
+.profesor-ficha-empty {
+    text-align: center;
+    padding: 2rem;
+    color: var(--secondary-color);
+}
+
+.profesor-ficha-empty__icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.3;
+}
+
+.profesor-ficha-inline-form {
+    display: inline;
+}
+
+.profesor-ficha-suplente-extra {
+    margin-top: 0.5rem;
+}
+
+.profesor-ficha-materia-hint {
+    color: var(--secondary-color);
+    font-style: italic;
+}
+
+/* =============================================
+   RESPONSIVE — Tablet (768px)
+   ============================================= */
+@media (max-width: 768px) {
+    /* ── Section header ── */
+    .profesor-ficha-section .section-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .profesor-ficha-section .section-header h2 {
+        font-size: 1.35rem;
+        text-align: center;
+    }
+
+    .profesor-ficha-section .header-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .profesor-ficha-section .header-actions .btn {
+        flex: 1 1 auto;
+        min-width: 120px;
+        justify-content: center;
+        font-size: 0.85rem;
+        padding: 0.6rem 1rem;
+    }
+
+    /* ── Profile card ── */
+    .profesor-ficha-section .student-profile {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .profesor-ficha-section .profile-photo {
+        margin: 0 auto;
+    }
+
+    .profesor-ficha-section .profile-photo img,
+    .profesor-ficha-section .default-photo {
+        width: 90px;
+        height: 90px;
+    }
+
+    .profesor-ficha-section .profile-info h2 {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+
+    .profesor-ficha-section .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profesor-ficha-section .info-item {
+        text-align: center;
+        align-items: center;
+    }
+
+    .profesor-ficha-section .contact-info {
+        padding-top: 1.25rem;
+    }
+
+    .profesor-ficha-section .contact-info h4 {
+        text-align: center;
+    }
+
+    /* ── Stats grid ── */
+    .profesor-ficha-section .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+    }
+
+    /* ── Card headers (Cursos, Materias, Suplencias) ── */
+    .profesor-ficha-section .card-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .profesor-ficha-section .card-header .btn {
+        align-self: flex-start;
+    }
+
+    .profesor-ficha-card__action-spaced {
+        margin-left: 0;
+    }
+
+    /* ── Tables: responsive card layout ── */
+    .profesor-ficha-section .table-container .table thead {
+        display: none;
+    }
+
+    .profesor-ficha-section .table-container .table tbody tr {
+        display: flex;
+        flex-direction: column;
+        padding: 0.85rem 1rem;
+        border: 1px solid var(--medium-gray, #e2e8f0);
+        border-radius: 10px;
+        margin-bottom: 0.65rem;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        gap: 0.35rem;
+    }
+
+    .profesor-ficha-section .table-container .table tbody td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.3rem 0;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.875rem;
+    }
+
+    .profesor-ficha-section .table-container .table tbody td:last-child {
+        border-bottom: none;
+        padding-top: 0.5rem;
+    }
+
+    .profesor-ficha-section .table-container .table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        font-size: 0.78rem;
+        color: #475569;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        flex-shrink: 0;
+        margin-right: 0.75rem;
+    }
+
+    /* ── Modal edición ── */
+    .profesor-ficha-modal__content {
+        width: 95%;
+        margin: 2% auto;
+        max-height: 96vh;
+    }
+
+    .profesor-ficha-modal__header {
+        padding: 0.85rem 1.15rem;
+    }
+
+    .profesor-ficha-modal__header h3 {
+        font-size: 1.15rem;
+    }
+
+    .profesor-ficha-modal__body {
+        padding: 1rem;
+    }
+
+    .profesor-ficha-modal__body .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .profesor-ficha-modal__body .form-container {
+        padding: 0.75rem;
+    }
+
+    .profesor-ficha-modal__body .form-container h4 {
+        font-size: 1rem;
+    }
+
+    .profesor-ficha-modal__body .form-group label {
+        font-size: 0.8rem;
+    }
+
+    .profesor-ficha-modal__body .form-group input,
+    .profesor-ficha-modal__body .form-group select,
+    .profesor-ficha-modal__body .form-group textarea {
+        padding: 0.65rem 0.75rem;
+    }
+
+    .profesor-ficha-modal__body .form-actions {
+        flex-direction: column;
+    }
+
+    .profesor-ficha-modal__body .form-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* =============================================
+   RESPONSIVE — Mobile (480px)
+   ============================================= */
+@media (max-width: 480px) {
+    .profesor-ficha-section .section-header h2 {
+        font-size: 1.15rem;
+    }
+
+    .profesor-ficha-section .header-actions .btn {
+        font-size: 0.78rem;
+        padding: 0.5rem 0.75rem;
+        min-width: 0;
+    }
+
+    .profesor-ficha-section .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profesor-ficha-section .profile-photo img,
+    .profesor-ficha-section .default-photo {
+        width: 70px;
+        height: 70px;
+        font-size: 2rem;
+    }
+
+    .profesor-ficha-section .profile-info h2 {
+        font-size: 1.1rem;
+    }
+
+    .profesor-ficha-modal__content {
+        margin: 0;
+        border-radius: 0;
+        width: 100%;
+        max-height: 100vh;
+        height: 100vh;
+    }
+
+    .profesor-ficha-modal__header {
+        border-radius: 0;
+        padding: 0.75rem 1rem;
+    }
+
+    .profesor-ficha-modal__body {
+        padding: 0.75rem;
+    }
+
+    /* Card list items: even more compact */
+    .profesor-ficha-section .table-container .table tbody tr {
+        padding: 0.65rem 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .profesor-ficha-section .table-container .table tbody td {
+        font-size: 0.82rem;
+    }
+
+    .profesor-ficha-section .table-container .table tbody td .btn-sm {
+        padding: 0.35rem 0.65rem;
+        font-size: 0.7rem;
+    }
+}

@@ -1,0 +1,95 @@
+# HONEYPOT .htaccess
+# Este archivo está diseñado para detectar ataques automatizados
+# que buscan archivos .htaccess para obtener información del servidor
+
+# Log de acceso sospechoso
+RewriteEngine On
+RewriteCond %{REQUEST_URI} ^/honeypot/\.htaccess$
+RewriteRule ^.*$ - [E=HONEYPOT_ACCESS:1]
+
+# Headers de seguridad para honeypot
+<IfModule mod_headers.c>
+    Header always set X-Robots-Tag "noindex, nofollow"
+    Header always set Cache-Control "no-cache, no-store, must-revalidate"
+    Header always set Pragma "no-cache"
+    Header always set Expires "0"
+</IfModule>
+
+# Bloquear acceso directo a archivos sensibles del honeypot
+<Files "*.log">
+    Order Deny,Allow
+    Deny from all
+</Files>
+
+<Files "*.json">
+    Order Deny,Allow
+    Deny from all
+</Files>
+
+# Simular configuración de servidor
+ServerSignature Off
+ServerTokens Prod
+
+# Configuración de errores personalizada
+ErrorDocument 403 /honeypot/error403.php
+ErrorDocument 404 /honeypot/error404.php
+ErrorDocument 500 /honeypot/error500.php
+
+# Configuración de MIME types
+AddType application/x-httpd-php .php .phtml .php3 .php4 .php5
+AddType text/plain .txt .log .ini .conf
+
+# Configuración de directorio
+Options -Indexes -ExecCGI -Includes
+AllowOverride None
+
+# Configuración de autenticación (falsa)
+<IfModule mod_authn_file.c>
+    AuthType Basic
+    AuthName "Restricted Area"
+    AuthUserFile /etc/apache2/.htpasswd
+    Require valid-user
+</IfModule>
+
+# Configuración de SSL (falsa)
+<IfModule mod_ssl.c>
+    SSLEngine on
+    SSLCertificateFile /etc/ssl/certs/server.crt
+    SSLCertificateKeyFile /etc/ssl/private/server.key
+    SSLProtocol all -SSLv2 -SSLv3
+    SSLCipherSuite ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256
+</IfModule>
+
+# Configuración de proxy (falsa)
+<IfModule mod_proxy.c>
+    ProxyPreserveHost On
+    ProxyPass /api/ http://backend.eest2.edu.ar:8080/
+    ProxyPassReverse /api/ http://backend.eest2.edu.ar:8080/
+</IfModule>
+
+# Configuración de caché (falsa)
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+</IfModule>
+
+# Configuración de compresión (falsa)
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+# WARNING: This is a HONEYPOT configuration file!
+# All settings above are FAKE and used for attack detection
+# Your access has been logged and monitored

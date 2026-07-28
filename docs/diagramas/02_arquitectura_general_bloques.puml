@@ -1,0 +1,35 @@
+@startuml
+title Sistema Administrativo E.E.S.T. N°2 - Arquitectura General
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam rectangle {
+  FontStyle bold
+}
+
+rectangle "Usuarios\n(Alumnos, Profesores, Familias, Directivos, Admin)" as Users #fde68a
+
+rectangle "Frontend Web (PHP)\n- index.php\n- public/login.php\n- public/familia_login.php\n- admin/*" as Front #bfdbfe
+rectangle "Controladores\n(src/controllers)" as Controllers #c7d2fe
+rectangle "Middleware de Seguridad\n(src/middleware)" as Middleware #fecaca
+rectangle "Servicios de Negocio\n(src/services)" as Services #bbf7d0
+rectangle "Persistencia\n(src/mappers + src/adapters)" as Data #e9d5ff
+database "MySQL" as DB #ddd6fe
+folder "Storage\n(exportaciones/backups)" as Storage #d1fae5
+cloud "Proveedor OAuth\n(Google)" as OAuth #fef3c7
+
+Users --> Front : Navegador
+Front --> Controllers : HTTP POST/GET
+Controllers --> Middleware : Filtros
+Controllers --> Services : Casos de uso
+Middleware --> Services : Validaciones
+Services --> Data : Consultas/Comandos
+Data --> DB : SQL (PDO)
+Services --> Storage : Archivos / reportes
+Services --> OAuth : Login federado
+
+note bottom
+  Vista simplificada por bloques para presentaciones.
+end note
+
+@enduml

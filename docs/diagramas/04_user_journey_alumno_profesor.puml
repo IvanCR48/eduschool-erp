@@ -1,0 +1,62 @@
+@startuml
+title User Journey Map - Perfiles de Usuario del Sistema
+
+skinparam backgroundColor white
+skinparam shadowing false
+
+|Profesor / Admin|
+start
+:Accede al sistema (login local u OAuth);
+if (Autenticación exitosa?) then (Sí)
+  :Ve dashboard según perfil;
+  :Selecciona módulo (notas, llamados, horarios, etc.);
+  :Carga o edita información manualmente\n(notas de alumnos, llamados disciplinarios, etc.);
+  :Sistema valida permisos y guarda;
+  :Opcionalmente genera reporte o exportación;
+else (No)
+  :Reintenta o recupera acceso;
+endif
+stop
+
+|Preceptor|
+start
+:Accede al sistema (login);
+if (Autenticación exitosa?) then (Sí)
+  :Ve listado de cursos asignados;
+  :Gestiona datos de estudiantes;
+  :Registra llamados de atención;
+  :Consulta horarios e información académica;
+else (No)
+  :Reintenta o notifica incidencia;
+endif
+stop
+
+|Equipo Directivo|
+start
+:Accede al sistema (login);
+if (Autenticación exitosa?) then (Sí)
+  :Consulta dashboard institucional;
+  :Revisa reportes académicos;
+  :Exporta resúmenes o estadísticas;
+else (No)
+  :Reintenta;
+endif
+stop
+
+|Familia / Tutor|
+start
+:Accede al portal de familias\n(familia_login.php);
+if (Acceso válido?) then (Sí)
+  :Selecciona alumno/a vinculado;
+  :Consulta información académica (solo lectura);
+else (No)
+  :Reintenta;
+endif
+stop
+
+legend bottom
+  Las familias acceden al portal propio, no al sistema administrativo principal.
+  Ningún actor externo puede modificar datos; solo el personal autorizado.
+endlegend
+
+@enduml

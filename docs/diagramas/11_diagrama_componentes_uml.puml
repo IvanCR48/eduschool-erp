@@ -1,0 +1,26 @@
+@startuml
+title Diagrama de Componentes UML - Sistema Administrativo Escolar
+
+skinparam componentStyle rectangle
+
+[UI PHP\n(index.php, public/*, admin/*)] as UI
+[Controladores\n(src/controllers)] as Controllers
+[Middleware\n(src/middleware)] as Middleware
+[Servicios de dominio\n(src/services)] as Services
+[Mappers\n(src/mappers)] as Mappers
+[Adaptadores DB\n(src/adapters)] as Adapters
+[Autenticación externa\nGoogle OAuth] as OAuth
+[Storage\narchivos/exportaciones] as Storage
+database [MySQL] as DB
+
+UI --> Controllers : POST/GET
+Controllers --> Middleware : filtros seguridad
+Controllers --> Services : casos de uso
+Middleware --> Services : validaciones
+Services --> Mappers : persistencia
+Mappers --> Adapters : acceso PDO
+Adapters --> DB : SQL
+Services --> OAuth : login federado
+Services --> Storage : reportes/backups
+
+@enduml

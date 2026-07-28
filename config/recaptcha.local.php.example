@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Plantilla de configuración local de Google reCAPTCHA v2 ("No soy un robot").
+ * Copie este archivo como 'recaptcha.local.php' y complete con sus claves reales.
+ *
+ * Obtener las claves en: https://www.google.com/recaptcha/admin
+ */
+
+return [
+    'site_key'   => '',
+    'secret_key' => '',
+];

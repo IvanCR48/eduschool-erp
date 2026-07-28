@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * Copiar a google_oauth.local.php y completar con credenciales de Google Cloud Console.
+ *
+ * 1. https://console.cloud.google.com/ → APIs y servicios → Credenciales
+ * 2. Crear credencial "ID de cliente OAuth" (aplicación web)
+ * 3. URI de redirección autorizada (debe coincidir exactamente con redirect_uri):
+ *    Ej.: http://localhost/SistemaAdmin/public/google_callback.php
+ *
+ * @return array<string, string>
+ */
+return [
+    'client_id' => '',
+    'client_secret' => '',
+    'redirect_uri' => 'http://localhost/SistemaAdmin/public/google_callback.php',
+];

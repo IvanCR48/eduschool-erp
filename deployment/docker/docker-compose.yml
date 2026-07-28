@@ -1,0 +1,134 @@
+version: '3.8'
+
+services:
+  # Base de datos MySQL
+  database:
+    image: mysql:8.0
+    container_name: sistema_admin_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-SecureRootPassword123!}
+      MYSQL_DATABASE: ${DB_NAME:-school_admin}
+      MYSQL_USER: ${DB_USER:-sistema_admin}
+      MYSQL_PASSWORD: ${DB_PASS:-SecurePassword123!}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/school_admin.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/custom.cnf:ro
+    ports:
+      - "3306:3306"
+    networks:
+      - sistema_network
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+      - DAC_OVERRIDE
+    tmpfs:
+      - /tmp
+      - /var/run/mysqld
+
+  # Aplicación PHP
+  web:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: sistema_admin_web
+    restart: unless-stopped
+    environment:
+      # Variables de base de datos
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-school_admin}
+      DB_USER: ${DB_USER:-sistema_admin}
+      DB_PASS: ${DB_PASS:-SecurePassword123!}
+      
+      # Variables de aplicación
+      APP_ENV: ${APP_ENV:-production}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_KEY: ${APP_KEY:-$(openssl rand -base64 32)}
+      
+      # Variables de seguridad
+      SESSION_LIFETIME: ${SESSION_LIFETIME:-120}
+      MAX_LOGIN_ATTEMPTS: ${MAX_LOGIN_ATTEMPTS:-5}
+      
+      # Variables de logging
+      LOG_LEVEL: ${LOG_LEVEL:-error}
+    volumes:
+      - ./logs:/var/www/html/logs
+      - ./backups:/var/www/html/backups
+      - ./uploads:/var/www/html/uploads
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    depends_on:
+      - database
+    networks:
+      - sistema_network
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/log/nginx
+      - /var/log/supervisor
+
+  # Redis para cache (opcional)
+  redis:
+    image: redis:7-alpine
+    container_name: sistema_admin_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-SecureRedisPassword123!}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - sistema_network
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+      - DAC_OVERRIDE
+
+  # Nginx reverse proxy (opcional para producción)
+  nginx:
+    image: nginx:alpine
+    container_name: sistema_admin_nginx
+    restart: unless-stopped
+    volumes:
+      - ./docker/nginx/proxy.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/ssl:/etc/nginx/ssl:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+    networks:
+      - sistema_network
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  sistema_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

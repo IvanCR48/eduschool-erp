@@ -1,0 +1,319 @@
+name: Security Scanning Pipeline
+
+on:
+  schedule:
+    # Ejecutar cada domingo a las 2 AM
+    - cron: '0 2 * * 0'
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: # Permite ejecución manual
+
+env:
+  PHP_VERSION: '8.1'
+  OWASP_ZAP_VERSION: '2.12.0'
+
+jobs:
+  # Job 1: Dependency Security Scan
+  dependency-scan:
+    name: Dependency Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.PHP_VERSION }}
+        extensions: mbstring, openssl, pdo_mysql, json, curl
+        
+    - name: Install Composer dependencies
+      run: composer install --no-dev --optimize-autoloader
+      
+    - name: Run Composer Audit
+      run: composer audit --format=json --output=composer-audit.json
+      
+    - name: Upload security audit results
+      uses: actions/upload-artifact@v3
+      with:
+        name: composer-audit-results
+        path: composer-audit.json
+        
+    - name: Comment PR with security findings
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const auditResults = JSON.parse(fs.readFileSync('composer-audit.json', 'utf8'));
+          
+          if (auditResults.vulnerabilities && auditResults.vulnerabilities.length > 0) {
+            let comment = '## 🔒 Security Audit Results\n\n';
+            comment += '**Vulnerabilidades encontradas en dependencias:**\n\n';
+            
+            auditResults.vulnerabilities.forEach(vuln => {
+              comment += `### ${vuln.package}\n`;
+              comment += `- **Versión**: ${vuln.version}\n`;
+              comment += `- **Severidad**: ${vuln.severity}\n`;
+              comment += `- **Descripción**: ${vuln.description}\n`;
+              comment += `- **Solución**: ${vuln.remediation}\n\n`;
+            });
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+          }
+
+  # Job 2: OWASP ZAP Security Scan
+  zap-scan:
+    name: OWASP ZAP Security Scan
+    runs-on: ubuntu-latest
+    needs: dependency-scan
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.PHP_VERSION }}
+        extensions: mbstring, openssl, pdo_mysql, json, curl
+        
+    - name: Start local server
+      run: |
+        php -S localhost:8000 -t public/ &
+        sleep 10
+        
+    - name: Download OWASP ZAP
+      run: |
+        wget https://github.com/zaproxy/zaproxy/releases/download/v${{ env.OWASP_ZAP_VERSION }}/ZAP_${{ env.OWASP_ZAP_VERSION }}_Linux.tar.gz
+        tar -xzf ZAP_${{ env.OWASP_ZAP_VERSION }}_Linux.tar.gz
+        
+    - name: Run ZAP Baseline Scan
+      run: |
+        ./ZAP_${{ env.OWASP_ZAP_VERSION }}/zap.sh -cmd -quickurl http://localhost:8000 -quickprogress -quickout zap-report.json
+        
+    - name: Run ZAP Full Scan
+      run: |
+        ./ZAP_${{ env.OWASP_ZAP_VERSION }}/zap.sh -cmd -url http://localhost:8000 -progress -out zap-full-report.json
+        
+    - name: Generate ZAP Report
+      run: |
+        ./ZAP_${{ env.OWASP_ZAP_VERSION }}/zap.sh -cmd -url http://localhost:8000 -progress -out zap-report.html -format html
+        
+    - name: Upload ZAP reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: zap-security-reports
+        path: |
+          zap-report.json
+          zap-full-report.json
+          zap-report.html
+          
+    - name: Comment PR with ZAP findings
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const zapResults = JSON.parse(fs.readFileSync('zap-report.json', 'utf8'));
+          
+          let comment = '## 🛡️ OWASP ZAP Security Scan Results\n\n';
+          comment += `**Total de alertas**: ${zapResults.site.length}\n\n`;
+          
+          if (zapResults.site && zapResults.site.length > 0) {
+            comment += '### Alertas encontradas:\n\n';
+            
+            zapResults.site.forEach(site => {
+              if (site.alerts && site.alerts.length > 0) {
+                site.alerts.forEach(alert => {
+                  comment += `#### ${alert.name} (${alert.risk})\n`;
+                  comment += `- **URL**: ${alert.url}\n`;
+                  comment += `- **Descripción**: ${alert.description}\n`;
+                  comment += `- **Solución**: ${alert.solution}\n\n`;
+                });
+              }
+            });
+          } else {
+            comment += '✅ No se encontraron vulnerabilidades de seguridad.\n';
+          }
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+
+  # Job 3: Custom Security Tests
+  custom-security-tests:
+    name: Custom Security Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.PHP_VERSION }}
+        extensions: mbstring, openssl, pdo_mysql, json, curl
+        
+    - name: Install PHPUnit
+      run: composer install --dev
+      
+    - name: Run Security Unit Tests
+      run: |
+        php vendor/bin/phpunit tests/Security/ --coverage-text --coverage-clover=coverage.xml
+        
+    - name: Run Custom Security Scans
+      run: |
+        # Test SQL Injection
+        php scripts/test_sql_injection.php
+        
+        # Test XSS
+        php scripts/test_xss.php
+        
+        # Test CSRF
+        php scripts/test_csrf.php
+        
+        # Test File Upload
+        php scripts/test_file_upload.php
+        
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-test-results
+        path: |
+          coverage.xml
+          test-results/
+
+  # Job 4: Security Report Generation
+  security-report:
+    name: Generate Security Report
+    runs-on: ubuntu-latest
+    needs: [dependency-scan, zap-scan, custom-security-tests]
+    if: always()
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+      
+    - name: Generate comprehensive security report
+      run: |
+        php scripts/generate_security_report.php
+        
+    - name: Upload final security report
+      uses: actions/upload-artifact@v3
+      with:
+        name: comprehensive-security-report
+        path: security-report.html
+        
+    - name: Create security summary
+      run: |
+        echo "# Security Scan Summary - $(date)" > security-summary.md
+        echo "" >> security-summary.md
+        echo "## Dependency Scan Results" >> security-summary.md
+        if [ -f composer-audit.json ]; then
+          echo "✅ Dependency scan completed" >> security-summary.md
+        else
+          echo "❌ Dependency scan failed" >> security-summary.md
+        fi
+        echo "" >> security-summary.md
+        echo "## OWASP ZAP Results" >> security-summary.md
+        if [ -f zap-report.json ]; then
+          echo "✅ OWASP ZAP scan completed" >> security-summary.md
+        else
+          echo "❌ OWASP ZAP scan failed" >> security-summary.md
+        fi
+        echo "" >> security-summary.md
+        echo "## Custom Security Tests" >> security-summary.md
+        if [ -f coverage.xml ]; then
+          echo "✅ Custom security tests completed" >> security-summary.md
+        else
+          echo "❌ Custom security tests failed" >> security-summary.md
+        fi
+        
+    - name: Upload security summary
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-summary
+        path: security-summary.md
+
+  # Job 5: Security Notifications
+  security-notifications:
+    name: Security Notifications
+    runs-on: ubuntu-latest
+    needs: [dependency-scan, zap-scan, custom-security-tests]
+    if: always()
+    
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+      
+    - name: Check for critical vulnerabilities
+      id: check_critical
+      run: |
+        CRITICAL_COUNT=0
+        
+        # Check dependency vulnerabilities
+        if [ -f composer-audit.json ]; then
+          CRITICAL_COUNT=$((CRITICAL_COUNT + $(jq '.vulnerabilities[] | select(.severity == "critical") | length' composer-audit.json | wc -l)))
+        fi
+        
+        # Check ZAP high/critical alerts
+        if [ -f zap-report.json ]; then
+          CRITICAL_COUNT=$((CRITICAL_COUNT + $(jq '.site[].alerts[] | select(.risk == "High" or .risk == "Critical") | length' zap-report.json | wc -l)))
+        fi
+        
+        echo "critical_count=$CRITICAL_COUNT" >> $GITHUB_OUTPUT
+        
+    - name: Send Slack notification
+      if: steps.check_critical.outputs.critical_count > 0
+      uses: 8398a7/action-slack@v3
+      with:
+        status: failure
+        channel: '#security-alerts'
+        text: |
+          🚨 CRITICAL SECURITY VULNERABILITIES DETECTED!
+          
+          Repository: ${{ github.repository }}
+          Branch: ${{ github.ref_name }}
+          Critical vulnerabilities: ${{ steps.check_critical.outputs.critical_count }}
+          
+          Please review the security scan results immediately.
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        
+    - name: Send email notification
+      if: steps.check_critical.outputs.critical_count > 0
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 587
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        subject: "🚨 Critical Security Vulnerabilities - ${{ github.repository }}"
+        to: ${{ secrets.SECURITY_TEAM_EMAIL }}
+        body: |
+          Critical security vulnerabilities have been detected in the security scan.
+          
+          Repository: ${{ github.repository }}
+          Branch: ${{ github.ref_name }}
+          Critical vulnerabilities: ${{ steps.check_critical.outputs.critical_count }}
+          
+          Please review the attached security reports and take immediate action.
+        attachments: |
+          composer-audit-results/composer-audit.json
+          zap-security-reports/zap-report.json
+          security-test-results/coverage.xml

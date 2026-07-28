@@ -1,0 +1,29 @@
+@startuml
+title Diagrama de Despliegue - Sistema Administrativo Escolar
+
+node "Cliente\nPC/Móvil con navegador" as Client {
+  artifact "Interfaz Web"
+}
+
+node "Servidor Web\nApache + PHP (XAMPP)" as WebServer {
+  artifact "App PHP\n(public, admin, index)"
+  artifact "Lógica aplicación\n(src/*)"
+}
+
+node "Servidor de Base de Datos\nMySQL" as DBServer {
+  database "sistema_admin"
+}
+
+cloud "Servicio externo\nGoogle OAuth" as OAuth
+folder "Almacenamiento local\nreportes/backups" as Storage
+
+Client --> WebServer : HTTPS/HTTP
+WebServer --> DBServer : Conexión MySQL (PDO)
+WebServer --> OAuth : OAuth 2.0
+WebServer --> Storage : Escritura/lectura archivos
+
+note bottom
+  Despliegue típico actual en entorno escolar local/servidor institucional.
+end note
+
+@enduml

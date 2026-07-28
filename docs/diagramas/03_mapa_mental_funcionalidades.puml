@@ -1,0 +1,37 @@
+@startmindmap
+title Sistema Administrativo E.E.S.T. N°2 - Mapa Mental de Funcionalidades
+
+* Sistema Administrativo Escolar
+** Autenticación y seguridad
+*** Login tradicional
+*** MFA / TOTP
+*** OAuth Google
+*** Gestión de sesión segura
+*** Headers y protección de requests
+** Gestión académica\n(carga manual por personal autorizado)
+*** Estudiantes (ABM)
+*** Profesores (ABM)
+*** Cursos y materias
+*** Horarios
+*** Notas (carga manual)
+*** Boletines (generados desde notas)
+*** Materias previas
+*** Llamados disciplinarios
+** Gestión institucional
+*** Especialidades
+*** Panel del equipo directivo
+*** Herramientas de administración
+** Reportes y exportaciones
+*** Reportes XLS/CSV
+*** Reportes PDF
+*** Métricas e indicadores de seguridad
+*** Dashboard de seguimiento académico
+** Portal familias\n(acceso externo de solo lectura)
+*** Login propio (familia_login.php)
+*** Consulta de información del alumno vinculado
+** Operación técnica
+*** Backups y scheduler
+*** Logs de seguridad
+*** Monitoreo de sistema
+
+@endmindmap
