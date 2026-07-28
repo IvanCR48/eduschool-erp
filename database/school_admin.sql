@@ -22,35 +22,6 @@ SET time_zone = "+00:00";
 -- Base de datos: `sistema_admin_eest2`
 --
 
-DELIMITER $$
---
--- Procedimientos
---
-CREATE PROCEDURE `sp_limpiar_cache_expirado` ()   BEGIN
-    DELETE FROM cache_data 
-    WHERE expira_en IS NOT NULL 
-    AND expira_en < NOW();
-END$$
-
-CREATE PROCEDURE `sp_limpiar_logs_antiguos` (IN `dias_retencion` INT)   BEGIN
-    DELETE FROM logs_errores 
-    WHERE creado_en < DATE_SUB(NOW(), INTERVAL dias_retencion DAY);
-    
-    DELETE FROM logs_eventos 
-    WHERE creado_en < DATE_SUB(NOW(), INTERVAL dias_retencion DAY);
-    
-    DELETE FROM logs_seguridad_avanzados 
-    WHERE creado_en < DATE_SUB(NOW(), INTERVAL dias_retencion DAY);
-END$$
-
-CREATE PROCEDURE `sp_limpiar_sesiones_expiradas` ()   BEGIN
-    DELETE FROM sesiones_usuarios 
-    WHERE activa = 1 
-    AND ultima_actividad < DATE_SUB(NOW(), INTERVAL 24 HOUR);
-END$$
-
-DELIMITER ;
-
 -- --------------------------------------------------------
 
 --
@@ -422,16 +393,6 @@ CREATE TABLE `estudiantes` (
 --
 
 
---
--- Disparadores `estudiantes`
---
-DELIMITER $$
-CREATE TRIGGER `tr_estudiantes_updated` BEFORE UPDATE ON `estudiantes` FOR EACH ROW BEGIN
-    SET NEW.actualizado_en = CURRENT_TIMESTAMP;
-END
-$$
-DELIMITER ;
-
 -- --------------------------------------------------------
 
 --
@@ -694,16 +655,6 @@ CREATE TABLE `notas` (
 --
 
 
---
--- Disparadores `notas`
---
-DELIMITER $$
-CREATE TRIGGER `tr_notas_updated` BEFORE UPDATE ON `notas` FOR EACH ROW BEGIN
-    SET NEW.actualizado_en = CURRENT_TIMESTAMP;
-END
-$$
-DELIMITER ;
-
 -- --------------------------------------------------------
 
 --
@@ -717,7 +668,7 @@ CREATE TABLE `notas_avance` (
   `etapa` enum('avance1','avance2') NOT NULL,
   `valor` enum('TEA','TEP','TED') NOT NULL,
   `observaciones` varchar(255) DEFAULT NULL,
-  `fecha` date NOT NULL DEFAULT curdate(),
+  `fecha` date NOT NULL DEFAULT (CURRENT_DATE),
   `creado_en` timestamp NOT NULL DEFAULT current_timestamp(),
   `actualizado_en` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -785,16 +736,6 @@ CREATE TABLE `profesores` (
 --
 
 
---
--- Disparadores `profesores`
---
-DELIMITER $$
-CREATE TRIGGER `tr_profesores_updated` BEFORE UPDATE ON `profesores` FOR EACH ROW BEGIN
-    SET NEW.actualizado_en = CURRENT_TIMESTAMP;
-END
-$$
-DELIMITER ;
-
 -- --------------------------------------------------------
 
 --
@@ -805,7 +746,7 @@ CREATE TABLE `profesor_curso` (
   `id` int(11) NOT NULL,
   `profesor_id` int(11) NOT NULL,
   `curso_id` int(11) NOT NULL,
-  `anio_academico` int(4) NOT NULL DEFAULT year(curdate()),
+  `anio_academico` int(4) NOT NULL DEFAULT (YEAR(CURRENT_DATE)),
   `activo` tinyint(1) DEFAULT 1,
   `creado_en` timestamp NOT NULL DEFAULT current_timestamp(),
   `actualizado_en` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -1326,8 +1267,9 @@ CREATE TABLE `v_profesores_completos` (
 -- Estructura para la vista `v_estudiantes_completos`
 --
 DROP TABLE IF EXISTS `v_estudiantes_completos`;
+DROP VIEW IF EXISTS `v_estudiantes_completos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_estudiantes_completos`  AS SELECT `e`.`id` AS `id`, `e`.`dni` AS `dni`, `e`.`apellido` AS `apellido`, `e`.`nombre` AS `nombre`, `e`.`fecha_nacimiento` AS `fecha_nacimiento`, `e`.`email` AS `email`, `e`.`telefono` AS `telefono`, `c`.`nombre` AS `curso_nombre`, `c`.`anio` AS `anio`, `c`.`division` AS `division`, `esp`.`nombre` AS `especialidad_nombre`, `e`.`activo` AS `activo`, `e`.`fecha_ingreso` AS `fecha_ingreso`, `e`.`creado_en` AS `creado_en` FROM ((`estudiantes` `e` join `cursos` `c` on(`e`.`curso_id` = `c`.`id`)) left join `especialidades` `esp` on(`c`.`especialidad_id` = `esp`.`id`)) ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_estudiantes_completos` AS SELECT `e`.`id` AS `id`, `e`.`dni` AS `dni`, `e`.`nombre` AS `nombre`, `e`.`apellido` AS `apellido`, CONCAT(`e`.`apellido`, ', ', `e`.`nombre`) AS `nombre_completo`, `e`.`fecha_nacimiento` AS `fecha_nacimiento`, TIMESTAMPDIFF(YEAR, `e`.`fecha_nacimiento`, CURDATE()) AS `edad`, `e`.`grupo_sanguineo` AS `grupo_sanguineo`, `e`.`obra_social` AS `obra_social`, `e`.`domicilio` AS `domicilio`, `e`.`telefono` AS `telefono`, `e`.`email` AS `email`, `e`.`curso_id` AS `curso_id`, `e`.`activo` AS `activo`, `e`.`dni_responsable` AS `dni_responsable`, `e`.`grupo_taller` AS `grupo_taller`, `e`.`fecha_ingreso` AS `fecha_ingreso`, `c`.`anio` AS `curso_anio`, `c`.`division` AS `curso_division`, `c`.`turno_id` AS `curso_turno`, `esp`.`nombre` AS `especialidad_nombre` FROM ((`estudiantes` `e` LEFT JOIN `cursos` `c` ON(`e`.`curso_id` = `c`.`id`)) LEFT JOIN `especialidades` `esp` ON(`c`.`especialidad_id` = `esp`.`id`));
 
 -- --------------------------------------------------------
 
@@ -1335,8 +1277,9 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Estructura para la vista `v_notas_completas`
 --
 DROP TABLE IF EXISTS `v_notas_completas`;
+DROP VIEW IF EXISTS `v_notas_completas`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_notas_completas`  AS SELECT `n`.`id` AS `id`, `n`.`calificacion` AS `calificacion`, `n`.`bimestre` AS `bimestre`, `n`.`tipo_evaluacion` AS `tipo_evaluacion`, `n`.`fecha` AS `fecha`, `e`.`apellido` AS `estudiante_apellido`, `e`.`nombre` AS `estudiante_nombre`, `e`.`dni` AS `estudiante_dni`, `m`.`nombre` AS `materia_nombre`, `p`.`apellido` AS `profesor_apellido`, `p`.`nombre` AS `profesor_nombre`, `c`.`nombre` AS `curso_nombre` FROM ((((`notas` `n` join `estudiantes` `e` on(`n`.`estudiante_id` = `e`.`id`)) join `materias` `m` on(`n`.`materia_id` = `m`.`id`)) join `profesores` `p` on(`n`.`profesor_id` = `p`.`id`)) join `cursos` `c` on(`e`.`curso_id` = `c`.`id`)) ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_notas_completas` AS SELECT `n`.`id` AS `id`, `n`.`estudiante_id` AS `estudiante_id`, `n`.`materia_id` AS `materia_id`, `n`.`profesor_id` AS `profesor_id`, `n`.`calificacion` AS `calificacion`, `n`.`bimestre` AS `bimestre`, `n`.`tipo_evaluacion` AS `tipo_evaluacion`, `n`.`observaciones` AS `observaciones`, `n`.`fecha` AS `fecha`, `e`.`nombre` AS `estudiante_nombre`, `e`.`apellido` AS `estudiante_apellido`, `e`.`dni` AS `estudiante_dni`, `m`.`nombre` AS `materia_nombre`, `p`.`nombre` AS `profesor_nombre`, `p`.`apellido` AS `profesor_apellido` FROM (((`notas` `n` JOIN `estudiantes` `e` ON(`n`.`estudiante_id` = `e`.`id`)) JOIN `materias` `m` ON(`n`.`materia_id` = `m`.`id`)) LEFT JOIN `profesores` `p` ON(`n`.`profesor_id` = `p`.`id`));
 
 -- --------------------------------------------------------
 
@@ -1344,8 +1287,9 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Estructura para la vista `v_profesores_completos`
 --
 DROP TABLE IF EXISTS `v_profesores_completos`;
+DROP VIEW IF EXISTS `v_profesores_completos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_profesores_completos`  AS SELECT `p`.`id` AS `id`, `p`.`dni` AS `dni`, `p`.`apellido` AS `apellido`, `p`.`nombre` AS `nombre`, `p`.`email` AS `email`, `p`.`telefono` AS `telefono`, `esp`.`nombre` AS `especialidad_nombre`, `p`.`activo` AS `activo`, `p`.`fecha_ingreso` AS `fecha_ingreso`, `p`.`creado_en` AS `creado_en` FROM (`profesores` `p` left join `especialidades` `esp` on(`p`.`especialidad_id` = `esp`.`id`)) ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_profesores_completos` AS SELECT `p`.`id` AS `id`, `p`.`dni` AS `dni`, `p`.`nombre` AS `nombre`, `p`.`apellido` AS `apellido`, CONCAT(`p`.`apellido`, ', ', `p`.`nombre`) AS `nombre_completo`, `p`.`email` AS `email`, `p`.`telefono` AS `telefono`, `p`.`titulo` AS `titulo`, `p`.`activo` AS `activo`, `u`.`id` AS `usuario_id`, `u`.`rol` AS `usuario_rol` FROM (`profesores` `p` LEFT JOIN `usuarios` `u` ON(`p`.`dni` = `u`.`dni`));
 
 --
 -- Índices para tablas volcadas
@@ -2267,17 +2211,6 @@ ALTER TABLE `usuarios_mfa`
 ALTER TABLE `usuarios_mfa_temporal`
   ADD CONSTRAINT `usuarios_mfa_temporal_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
 
-DELIMITER $$
---
--- Eventos
---
-CREATE DEFINER=`root`@`localhost` EVENT `ev_limpiar_sesiones` ON SCHEDULE EVERY 1 HOUR STARTS '2025-09-28 14:47:25' ON COMPLETION NOT PRESERVE ENABLE DO CALL sp_limpiar_sesiones_expiradas()$$
-
-CREATE DEFINER=`root`@`localhost` EVENT `ev_limpiar_cache` ON SCHEDULE EVERY 30 MINUTE STARTS '2025-09-28 14:47:25' ON COMPLETION NOT PRESERVE ENABLE DO CALL sp_limpiar_cache_expirado()$$
-
-CREATE DEFINER=`root`@`localhost` EVENT `ev_limpiar_logs` ON SCHEDULE EVERY 1 DAY STARTS '2025-09-28 14:47:25' ON COMPLETION NOT PRESERVE ENABLE DO CALL sp_limpiar_logs_antiguos(30)$$
-
-DELIMITER ;
 SET FOREIGN_KEY_CHECKS = 1;
 COMMIT;
 
