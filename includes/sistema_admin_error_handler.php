@@ -111,24 +111,12 @@ if (!function_exists('sistema_admin_render_friendly_error')) {
             exit;
         }
 
-        $showDebug = $isDev || strtolower((string) (getenv('APP_DEBUG') ?: ($_ENV['APP_DEBUG'] ?? ''))) === 'true' || isset($_GET['debug']);
-
-        if ($showDebug) {
-            $msgText = $exception->getMessage() . ' in ' . $exception->getFile() . ':' . $exception->getLine();
-            echo '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>System Error</title>';
-            echo '<style>body{margin:0;background:#f6f8fb;font-family:Arial,sans-serif;color:#1f2937}.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}.card{max-width:700px;width:100%;background:#fff;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.08);padding:28px}.title{margin:0 0 10px;font-size:24px;color:#dc2626}.msg{margin:0 0 14px;line-height:1.5;font-family:monospace;background:#f1f5f9;padding:12px;border-radius:6px;word-break:break-all}.meta{font-size:13px;color:#6b7280}</style></head><body>';
-            echo '<div class="wrap"><div class="card"><h1 class="title">Application Error (500)</h1>';
-            echo '<div class="msg">' . htmlspecialchars($msgText, ENT_QUOTES, 'UTF-8') . '</div>';
-            echo '<pre style="font-size:11px;overflow:auto;max-height:200px">' . htmlspecialchars($exception->getTraceAsString(), ENT_QUOTES, 'UTF-8') . '</pre>';
-            echo '</div></div></body></html>';
-            exit;
-        }
-
-        echo '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>' . htmlspecialchars(__('auto.error_del_sistema'), ENT_QUOTES, 'UTF-8') . '</title>';
-        echo '<style>body{margin:0;background:#f6f8fb;font-family:Arial,sans-serif;color:#1f2937}.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}.card{max-width:560px;width:100%;background:#fff;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.08);padding:28px}.title{margin:0 0 10px;font-size:24px}.msg{margin:0 0 14px;line-height:1.5}.meta{font-size:13px;color:#6b7280}.mail{font-weight:700;color:#1d4ed8;text-decoration:none}</style></head><body>';
-        echo '<div class="wrap"><div class="card"><h1 class="title">' . htmlspecialchars(__('auto.ups_ocurrio_un_problema'), ENT_QUOTES, 'UTF-8') . '</h1>';
-        echo '<p class="msg">' . htmlspecialchars(__('auto.no_te_preocupes_ya_registramos_el_incidente'), ENT_QUOTES, 'UTF-8') . '</p>';
-        echo '<p class="meta">' . htmlspecialchars(__('auto.soporte'), ENT_QUOTES, 'UTF-8') . ' <a class="mail" href="mailto:' . htmlspecialchars($supportEmail, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($supportEmail, ENT_QUOTES, 'UTF-8') . '</a><br>ID de error: ' . htmlspecialchars($errorId, ENT_QUOTES, 'UTF-8') . '</p>';
+        $msgText = $exception->getMessage() . ' in ' . $exception->getFile() . ':' . $exception->getLine();
+        echo '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>System Error</title>';
+        echo '<style>body{margin:0;background:#f6f8fb;font-family:Arial,sans-serif;color:#1f2937}.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}.card{max-width:700px;width:100%;background:#fff;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.08);padding:28px}.title{margin:0 0 10px;font-size:24px;color:#dc2626}.msg{margin:0 0 14px;line-height:1.5;font-family:monospace;background:#f1f5f9;padding:12px;border-radius:6px;word-break:break-all}.meta{font-size:13px;color:#6b7280}</style></head><body>';
+        echo '<div class="wrap"><div class="card"><h1 class="title">Application Error (500)</h1>';
+        echo '<div class="msg">' . htmlspecialchars($msgText, ENT_QUOTES, 'UTF-8') . '</div>';
+        echo '<pre style="font-size:11px;overflow:auto;max-height:200px">' . htmlspecialchars($exception->getTraceAsString(), ENT_QUOTES, 'UTF-8') . '</pre>';
         echo '</div></div></body></html>';
         exit;
     }
