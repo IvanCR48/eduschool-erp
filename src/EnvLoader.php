@@ -1,4 +1,6 @@
 <?php
+// Cache-buster build 2026-07-28-v2
+declare(strict_types=1);
 
 /**
  * Cargador de variables de entorno desde archivo .env
