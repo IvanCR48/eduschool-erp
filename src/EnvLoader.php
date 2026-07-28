@@ -137,6 +137,7 @@ class EnvLoader {
                 putenv($key . '=' . $value);
             }
         }
+    }
     
     /**
      * Obtiene una variable de entorno con valor por defecto
