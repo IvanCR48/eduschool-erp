@@ -56,7 +56,13 @@ if (!function_exists('sistema_admin_error_handler_register')) {
 if (!function_exists('sistema_admin_is_dev_env')) {
     function sistema_admin_is_dev_env(): bool
     {
-        return true;
+        $appEnv = strtolower((string) ($_ENV['APP_ENV'] ?? getenv('APP_ENV') ?: ''));
+        if (in_array($appEnv, ['dev', 'development', 'local'], true)) {
+            return true;
+        }
+
+        $host = strtolower((string) ($_SERVER['HTTP_HOST'] ?? ''));
+        return str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
     }
 }
 

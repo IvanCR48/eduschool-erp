@@ -100,17 +100,15 @@ class EnvLoader {
     }
     
     /**
-     * Establece valores por defecto si no existe .env
-     */
     private static function setDefaultEnv(): void {
-        // Auto-detect Railway / Cloud MySQL environment variables
-        $railwayHost = getenv('MYSQLHOST') ?: (getenv('MYSQL_HOST') ?: (getenv('RAILWAY_MYSQL_HOST') ?: 'localhost'));
-        $railwayPort = getenv('MYSQLPORT') ?: (getenv('MYSQL_PORT') ?: '3306');
-        $railwayDb   = getenv('MYSQLDATABASE') ?: (getenv('MYSQL_DATABASE') ?: (getenv('RAILWAY_MYSQL_DATABASE') ?: 'school_admin'));
-        $railwayUser = getenv('MYSQLUSER') ?: (getenv('MYSQL_USER') ?: (getenv('RAILWAY_MYSQL_USER') ?: 'root'));
-        $railwayPass = getenv('MYSQLPASSWORD') ?: (getenv('MYSQL_PASSWORD') ?: (getenv('RAILWAY_MYSQL_PASSWORD') ?: ''));
+        $isRailway = getenv('RAILWAY_STATIC_URL') !== false || getenv('RAILWAY_PUBLIC_DOMAIN') !== false || getenv('PORT') !== false || getenv('RAILWAY_ENVIRONMENT') !== false;
 
-        $isRailway = getenv('RAILWAY_STATIC_URL') !== false || getenv('RAILWAY_PUBLIC_DOMAIN') !== false || getenv('PORT') !== false;
+        // Auto-detect Railway / Cloud MySQL environment variables
+        $railwayHost = getenv('MYSQLHOST') ?: (getenv('MYSQL_HOST') ?: (getenv('RAILWAY_MYSQL_HOST') ?: ($isRailway ? 'altaria.proxy.rlwy.net' : 'localhost')));
+        $railwayPort = getenv('MYSQLPORT') ?: (getenv('MYSQL_PORT') ?: ($isRailway ? '51056' : '3306'));
+        $railwayDb   = getenv('MYSQLDATABASE') ?: (getenv('MYSQL_DATABASE') ?: (getenv('RAILWAY_MYSQL_DATABASE') ?: ($isRailway ? 'railway' : 'school_admin')));
+        $railwayUser = getenv('MYSQLUSER') ?: (getenv('MYSQL_USER') ?: (getenv('RAILWAY_MYSQL_USER') ?: 'root'));
+        $railwayPass = getenv('MYSQLPASSWORD') ?: (getenv('MYSQL_PASSWORD') ?: (getenv('RAILWAY_MYSQL_PASSWORD') ?: ($isRailway ? 'FuCJnrHXcSKZigIHjqhughtJcAOoQTHX' : '')));
 
         $defaults = [
             'DB_HOST' => $railwayHost,
