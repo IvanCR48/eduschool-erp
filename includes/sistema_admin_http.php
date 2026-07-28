@@ -15,12 +15,7 @@ if (!function_exists('sistema_admin_login_redirect_url')) {
      */
     function sistema_admin_login_redirect_url(): string
     {
-        $script = $_SERVER['SCRIPT_NAME'] ?? '';
-        if (strpos($script, '/admin/') !== false) {
-            return '../public/portal.php';
-        }
-
-        return 'public/portal.php';
+        return app_base_path('public/portal.php');
     }
 }
 
