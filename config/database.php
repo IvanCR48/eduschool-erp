@@ -8,12 +8,12 @@ class Database {
     private $connection;
     
     private function __construct() {
-        // Datos de conexión MySQL con variables de entorno
-        $host = EnvLoader::get('DB_HOST', 'localhost');
-        $port = EnvLoader::get('DB_PORT', '3306');
-        $dbname = EnvLoader::get('DB_NAME');
-        $username = EnvLoader::get('DB_USER');
-        $password = EnvLoader::get('DB_PASS');
+        // Datos de conexión MySQL con variables de entorno (con fallback a Railway)
+        $host     = EnvLoader::get('DB_HOST', getenv('MYSQLHOST') ?: (getenv('MYSQL_HOST') ?: 'localhost'));
+        $port     = EnvLoader::get('DB_PORT', getenv('MYSQLPORT') ?: (getenv('MYSQL_PORT') ?: '3306'));
+        $dbname   = EnvLoader::get('DB_NAME', getenv('MYSQLDATABASE') ?: (getenv('MYSQL_DATABASE') ?: 'school_admin'));
+        $username = EnvLoader::get('DB_USER', getenv('MYSQLUSER') ?: (getenv('MYSQL_USER') ?: 'root'));
+        $password = EnvLoader::get('DB_PASS', getenv('MYSQLPASSWORD') ?: (getenv('MYSQL_PASSWORD') ?: ''));
         
         // Validar configuración crítica
         if ($dbname === null || $dbname === '' || $username === null || $username === '' || $password === null) {

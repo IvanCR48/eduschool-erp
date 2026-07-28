@@ -103,35 +103,40 @@ class EnvLoader {
      * Establece valores por defecto si no existe .env
      */
     private static function setDefaultEnv(): void {
+        // Auto-detect Railway / Cloud MySQL environment variables
+        $railwayHost = getenv('MYSQLHOST') ?: (getenv('MYSQL_HOST') ?: (getenv('RAILWAY_MYSQL_HOST') ?: 'localhost'));
+        $railwayPort = getenv('MYSQLPORT') ?: (getenv('MYSQL_PORT') ?: '3306');
+        $railwayDb   = getenv('MYSQLDATABASE') ?: (getenv('MYSQL_DATABASE') ?: (getenv('RAILWAY_MYSQL_DATABASE') ?: 'school_admin'));
+        $railwayUser = getenv('MYSQLUSER') ?: (getenv('MYSQL_USER') ?: (getenv('RAILWAY_MYSQL_USER') ?: 'root'));
+        $railwayPass = getenv('MYSQLPASSWORD') ?: (getenv('MYSQL_PASSWORD') ?: (getenv('RAILWAY_MYSQL_PASSWORD') ?: ''));
+
+        $isRailway = getenv('RAILWAY_STATIC_URL') !== false || getenv('RAILWAY_PUBLIC_DOMAIN') !== false || getenv('PORT') !== false;
+
         $defaults = [
-            'DB_HOST' => 'localhost',
-            'DB_PORT' => '3306',
-            'DB_NAME' => 'school_admin',
-            'DB_USER' => 'root',
-            'DB_PASS' => '',
-            'APP_ENV' => 'development',
-            'APP_DEBUG' => 'true',
+            'DB_HOST' => $railwayHost,
+            'DB_PORT' => $railwayPort,
+            'DB_NAME' => $railwayDb,
+            'DB_USER' => $railwayUser,
+            'DB_PASS' => $railwayPass,
+            'APP_ENV' => $isRailway ? 'production' : 'development',
+            'APP_DEBUG' => $isRailway ? 'false' : 'true',
             'SESSION_LIFETIME' => '120',
             'MAX_LOGIN_ATTEMPTS' => '5',
-            // Base path used in HTTP Location headers and HTML asset paths.
-            // In XAMPP local dev this is '/SistemaAdmin'. In production (domain root) set to '/'.
-            'APP_BASE_PATH' => '/SistemaAdmin',
-            // Full public URL of the app (no trailing slash) used for QR codes, OAuth callbacks, etc.
-            'APP_URL' => 'http://localhost/SistemaAdmin',
+            'APP_BASE_PATH' => $isRailway ? '/' : '/SistemaAdmin',
+            'APP_URL' => getenv('RAILWAY_PUBLIC_DOMAIN') ? ('https://' . getenv('RAILWAY_PUBLIC_DOMAIN')) : 'http://localhost/SistemaAdmin',
         ];
         
         foreach ($defaults as $key => $value) {
-            if (!isset($_ENV[$key])) {
+            if (!isset($_ENV[$key]) || $_ENV[$key] === '') {
                 $_ENV[$key] = $value;
             }
-            if (!isset($_SERVER[$key])) {
+            if (!isset($_SERVER[$key]) || $_SERVER[$key] === '') {
                 $_SERVER[$key] = $value;
             }
-            if (getenv($key) === false) {
+            if (getenv($key) === false || getenv($key) === '') {
                 putenv($key . '=' . $value);
             }
         }
-    }
     
     /**
      * Obtiene una variable de entorno con valor por defecto
