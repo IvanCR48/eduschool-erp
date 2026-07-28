@@ -22,11 +22,11 @@ class PdoDatabase
         require_once __DIR__ . '/../EnvLoader.php';
         \EnvLoader::load();
 
-        $host     = \EnvLoader::get('DB_HOST', getenv('MYSQLHOST') ?: (getenv('MYSQL_HOST') ?: 'localhost'));
-        $port     = \EnvLoader::get('DB_PORT', getenv('MYSQLPORT') ?: (getenv('MYSQL_PORT') ?: '3306'));
-        $dbname   = \EnvLoader::get('DB_NAME', getenv('MYSQLDATABASE') ?: (getenv('MYSQL_DATABASE') ?: 'school_admin'));
-        $username = \EnvLoader::get('DB_USER', getenv('MYSQLUSER') ?: (getenv('MYSQL_USER') ?: 'root'));
-        $password = \EnvLoader::get('DB_PASS', getenv('MYSQLPASSWORD') ?: (getenv('MYSQL_PASSWORD') ?: ''));
+        $host     = getenv('MYSQLHOST') ?: (getenv('MYSQL_HOST') ?: \EnvLoader::get('DB_HOST', 'localhost'));
+        $port     = getenv('MYSQLPORT') ?: (getenv('MYSQL_PORT') ?: \EnvLoader::get('DB_PORT', '3306'));
+        $dbname   = getenv('MYSQLDATABASE') ?: (getenv('MYSQL_DATABASE') ?: \EnvLoader::get('DB_NAME', 'school_admin'));
+        $username = getenv('MYSQLUSER') ?: (getenv('MYSQL_USER') ?: \EnvLoader::get('DB_USER', 'root'));
+        $password = getenv('MYSQLPASSWORD') ?: (getenv('MYSQL_PASSWORD') ?: \EnvLoader::get('DB_PASS', ''));
 
         if ($dbname === null || $dbname === '' || $username === null || $username === '' || $password === null) {
             throw new \RuntimeException('Configuración de base de datos incompleta en .env (DB_NAME, DB_USER, DB_PASS)');
