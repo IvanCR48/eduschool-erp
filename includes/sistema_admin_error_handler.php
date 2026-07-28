@@ -75,8 +75,9 @@ if (!function_exists('sistema_admin_support_email')) {
 }
 
 if (!function_exists('sistema_admin_render_friendly_error')) {
-    function sistema_admin_render_friendly_error(Throwable $exception, bool $isDev): void
+    function sistema_admin_render_friendly_error(Throwable $exception, ?bool $isDev = null): void
     {
+        $isDev = $isDev ?? sistema_admin_is_dev_env();
         $errorId = date('YmdHis') . '-' . substr(bin2hex(random_bytes(4)), 0, 8);
         $supportEmail = sistema_admin_support_email();
 
