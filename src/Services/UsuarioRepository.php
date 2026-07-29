@@ -22,16 +22,10 @@ class UsuarioRepository extends BaseService
      */
     public function findByUsername(string $username): ?array
     {
-        if (strpos($username, '@') !== false) {
-            return $this->database->fetch(
-                "SELECT * FROM usuarios WHERE email = ? AND activo = 1 LIMIT 1",
-                [$username]
-            );
-        }
-
+        $username = trim($username);
         return $this->database->fetch(
-            "SELECT * FROM usuarios WHERE dni = ? AND activo = 1 LIMIT 1",
-            [$username]
+            "SELECT * FROM usuarios WHERE (email = ? OR dni = ?) AND activo = 1 LIMIT 1",
+            [$username, $username]
         );
     }
 
