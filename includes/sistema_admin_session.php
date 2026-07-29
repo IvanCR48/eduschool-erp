@@ -20,9 +20,10 @@ I18nService::init();
 if (session_status() === PHP_SESSION_NONE) {
     AppRequestInit::configureSessionIni(sistema_admin_db_adapter());
     if (!headers_sent()) {
-        $https = strtolower((string) ($_SERVER['HTTPS'] ?? ''));
-        $forwardedProto = strtolower((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''));
-        $isSecure = in_array($https, ['on', '1', 'true'], true) || str_contains($forwardedProto, 'https');
+        $isSecure = in_array($https, ['on', '1', 'true'], true)
+            || str_contains($forwardedProto, 'https')
+            || getenv('RAILWAY_ENVIRONMENT') !== false
+            || getenv('RAILWAY_PUBLIC_DOMAIN') !== false;
 
         ini_set('session.use_strict_mode', '1');
         session_set_cookie_params([
