@@ -72,15 +72,15 @@ if ($errGet !== '' && isset($erroresGoogle[$errGet])) {
 
 $username = '';
 $password = '';
-$esPost = strtoupper((string) (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_DEFAULT) ?? '')) === 'POST';
+$requestMethod = strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_DEFAULT) ?? ''));
+$esPost = $requestMethod === 'POST';
 
 if ($esPost) {
     // Reset any error carried over from a previous Google OAuth redirect in the URL.
-    // Without this, a stale ?error=google_* in the URL would keep showing the Google
-    // error message even when the user is now trying a normal DNI/password login.
     $error = '';
-    $username = trim((string) (filter_input(INPUT_POST, 'username', FILTER_DEFAULT) ?? ''));
-    $password = (string) (filter_input(INPUT_POST, 'password', FILTER_DEFAULT) ?? '');
+    $username = trim((string) ($_POST['username'] ?? filter_input(INPUT_POST, 'username', FILTER_DEFAULT) ?? ''));
+    $password = (string) ($_POST['password'] ?? filter_input(INPUT_POST, 'password', FILTER_DEFAULT) ?? '');
+    $csrfToken = (string) ($_POST['csrf_token'] ?? filter_input(INPUT_POST, 'csrf_token', FILTER_DEFAULT) ?? '');
 
     if ($username === '' || $password === '') {
         $error = 'Por favor complete todos los campos.';
@@ -88,7 +88,7 @@ if ($esPost) {
         $resultado = $loginController->autenticar([
             'username' => $username,
             'password' => $password,
-            'csrf_token' => (string) (filter_input(INPUT_POST, 'csrf_token', FILTER_DEFAULT) ?? ''),
+            'csrf_token' => $csrfToken,
         ]);
 
         if ($resultado['success']) {
