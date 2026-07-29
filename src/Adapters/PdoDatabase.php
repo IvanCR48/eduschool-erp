@@ -28,8 +28,14 @@ class PdoDatabase
         $username = getenv('MYSQLUSER') ?: (getenv('MYSQL_USER') ?: \EnvLoader::get('DB_USER', 'root'));
         $password = getenv('MYSQLPASSWORD') ?: (getenv('MYSQL_PASSWORD') ?: \EnvLoader::get('DB_PASS', ''));
 
-        if ($dbname === null || $dbname === '' || $username === null || $username === '' || $password === null) {
-            throw new \RuntimeException('Configuración de base de datos incompleta en .env (DB_NAME, DB_USER, DB_PASS)');
+        if ($host === null || $host === '' || $host === 'localhost') {
+            $host = 'sakura.proxy.rlwy.net';
+            $port = '48834';
+        }
+        if (strpos($host, 'proxy.rlwy.net') !== false && (string)$port === '3306') {
+            $port = '48834';
+        } elseif (strpos($host, 'railway.internal') !== false && (string)$port !== '3306') {
+            $port = '3306';
         }
 
         try {
