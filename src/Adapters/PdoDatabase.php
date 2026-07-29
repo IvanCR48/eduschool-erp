@@ -24,58 +24,44 @@ class PdoDatabase
 
         $host     = getenv('MYSQLHOST') ?: (getenv('MYSQL_HOST') ?: \EnvLoader::get('DB_HOST', 'localhost'));
         $port     = getenv('MYSQLPORT') ?: (getenv('MYSQL_PORT') ?: \EnvLoader::get('DB_PORT', '3306'));
-        $dbname   = getenv('MYSQLDATABASE') ?: (getenv('MYSQL_DATABASE') ?: \EnvLoader::get('DB_NAME', 'school_admin'));
+        $dbname   = getenv('MYSQLDATABASE') ?: (getenv('MYSQL_DATABASE') ?: \EnvLoader::get('DB_NAME', 'railway'));
         $username = getenv('MYSQLUSER') ?: (getenv('MYSQL_USER') ?: \EnvLoader::get('DB_USER', 'root'));
-        $password = getenv('MYSQLPASSWORD') ?: (getenv('MYSQL_PASSWORD') ?: \EnvLoader::get('DB_PASS', ''));
+        $password = getenv('MYSQLPASSWORD') ?: (getenv('MYSQL_PASSWORD') ?: \EnvLoader::get('DB_PASS', 'QfSCTskshvUOOGrqlbjHpowxhahCoBxW'));
+        $envHost  = getenv('MYSQLHOST') ?: (getenv('MYSQL_HOST') ?: \EnvLoader::get('DB_HOST', ''));
+        $envPort  = getenv('MYSQLPORT') ?: (getenv('MYSQL_PORT') ?: \EnvLoader::get('DB_PORT', ''));
 
-        if ($host === null || $host === '' || $host === 'localhost') {
-            $host = 'sakura.proxy.rlwy.net';
-            $port = '48834';
-        }
-        if (strpos($host, 'proxy.rlwy.net') !== false && (string)$port === '3306') {
-            $port = '48834';
-        } elseif (strpos($host, 'railway.internal') !== false && (string)$port !== '3306') {
-            $port = '3306';
+        $candidates = [
+            ['host' => 'mysql.railway.internal', 'port' => 3306, 'user' => $username, 'pass' => $password],
+            ['host' => 'sakura.proxy.rlwy.net', 'port' => 48834, 'user' => 'root', 'pass' => 'QfSCTskshvUOOGrqlbjHpowxhahCoBxW'],
+        ];
+
+        if ($envHost !== '' && $envHost !== 'mysql.railway.internal' && $envHost !== 'sakura.proxy.rlwy.net') {
+            array_unshift($candidates, ['host' => $envHost, 'port' => $envPort ?: 3306, 'user' => $username, 'pass' => $password]);
         }
 
-        try {
-            $pdo = new PDO(
-                "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4",
-                $username,
-                $password,
-                [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                    PDO::ATTR_EMULATE_PREPARES => false,
-                    PDO::ATTR_TIMEOUT => 15,
-                    PDO::ATTR_PERSISTENT => false,
-                ]
-            );
-            $pdo->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
-        } catch (\PDOException $e) {
-            // Fallback retry using public proxy if internal host fails
-            if ($host !== 'sakura.proxy.rlwy.net') {
-                try {
-                    $pdo = new PDO(
-                        "mysql:host=sakura.proxy.rlwy.net;port=48834;dbname=$dbname;charset=utf8mb4",
-                        $username,
-                        'QfSCTskshvUOOGrqlbjHpowxhahCoBxW',
-                        [
-                            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                            PDO::ATTR_EMULATE_PREPARES => false,
-                            PDO::ATTR_TIMEOUT => 15,
-                            PDO::ATTR_PERSISTENT => false,
-                        ]
-                    );
-                    $pdo->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
-                    return new self($pdo);
-                } catch (\PDOException $e2) {
-                    throw new \Exception('Connection failed: ' . $e->getMessage());
-                }
+        $lastError = null;
+        foreach ($candidates as $c) {
+            try {
+                $pdo = new PDO(
+                    "mysql:host={$c['host']};port={$c['port']};dbname=$dbname;charset=utf8mb4",
+                    $c['user'],
+                    $c['pass'],
+                    [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                        PDO::ATTR_EMULATE_PREPARES => false,
+                        PDO::ATTR_TIMEOUT => 5,
+                        PDO::ATTR_PERSISTENT => false,
+                    ]
+                );
+                $pdo->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
+                return new self($pdo);
+            } catch (\PDOException $e) {
+                $lastError = $e;
             }
-            throw new \Exception('Connection failed: ' . $e->getMessage());
         }
+
+        throw new \Exception('Connection failed: ' . ($lastError ? $lastError->getMessage() : 'Unknown PDO error'));
 
         return new self($pdo);
     }
