@@ -41,12 +41,33 @@ class PdoDatabase
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                     PDO::ATTR_EMULATE_PREPARES => false,
-                    PDO::ATTR_TIMEOUT => 30,
+                    PDO::ATTR_TIMEOUT => 15,
                     PDO::ATTR_PERSISTENT => false,
                 ]
             );
             $pdo->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
+            // Fallback retry using public proxy if internal host fails
+            if ($host !== 'sakura.proxy.rlwy.net') {
+                try {
+                    $pdo = new PDO(
+                        "mysql:host=sakura.proxy.rlwy.net;port=48834;dbname=$dbname;charset=utf8mb4",
+                        $username,
+                        'QfSCTskshvUOOGrqlbjHpowxhahCoBxW',
+                        [
+                            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                            PDO::ATTR_EMULATE_PREPARES => false,
+                            PDO::ATTR_TIMEOUT => 15,
+                            PDO::ATTR_PERSISTENT => false,
+                        ]
+                    );
+                    $pdo->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
+                    return new self($pdo);
+                } catch (\PDOException $e2) {
+                    throw new \Exception('Connection failed: ' . $e->getMessage());
+                }
+            }
             throw new \Exception('Connection failed: ' . $e->getMessage());
         }
 
