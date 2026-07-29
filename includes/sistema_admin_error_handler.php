@@ -19,8 +19,8 @@ if (!function_exists('sistema_admin_error_handler_register')) {
         @ini_set('display_startup_errors', $isDev ? '1' : '0');
 
         set_error_handler(static function (int $severity, string $message, string $file, int $line): bool {
-            if (!(error_reporting() & $severity)) {
-                return false;
+            if ($severity === E_DEPRECATED || $severity === E_USER_DEPRECATED || !(error_reporting() & $severity)) {
+                return true;
             }
 
             $exception = new ErrorException($message, 0, $severity, $file, $line);
