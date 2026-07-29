@@ -57,16 +57,18 @@ class SessionSecurityMiddleware
             $_SESSION['user_ip'] = self::getClientIP();
         }
         
+        $currentUA = (string) ($_SERVER['HTTP_USER_AGENT'] ?? '');
+        
         // Verificar User-Agent
-        if (isset($_SESSION['user_agent'])) {
-            if ($_SESSION['user_agent'] !== $_SERVER['HTTP_USER_AGENT']) {
+        if (!empty($_SESSION['user_agent']) && $currentUA !== '') {
+            if ($_SESSION['user_agent'] !== $currentUA) {
                 // Log de posible session hijacking
                 $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'unknown';
                 error_log("Session Hijacking Alert: User Agent mismatch for user {$userId}");
                 return false;
             }
-        } else {
-            $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+        } elseif ($currentUA !== '') {
+            $_SESSION['user_agent'] = $currentUA;
         }
         
         $maxAge = 3600;
