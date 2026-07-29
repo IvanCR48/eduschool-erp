@@ -57,11 +57,11 @@ class EnvLoader
             getenv('PORT') !== false
         );
 
-        $host  = getenv('MYSQLHOST')     ?: (getenv('MYSQL_HOST')     ?: ($isRailway ? 'mysql.railway.internal' : 'localhost'));
-        $port  = getenv('MYSQLPORT')     ?: (getenv('MYSQL_PORT')     ?: ($isRailway ? '3306' : '3306'));
+        $host  = getenv('MYSQLHOST')     ?: (getenv('MYSQL_HOST')     ?: ($isRailway ? 'sakura.proxy.rlwy.net' : 'localhost'));
+        $port  = getenv('MYSQLPORT')     ?: (getenv('MYSQL_PORT')     ?: ($isRailway ? '48834' : '3306'));
         $db    = getenv('MYSQLDATABASE') ?: (getenv('MYSQL_DATABASE') ?: ($isRailway ? 'railway' : 'school_admin'));
         $user  = getenv('MYSQLUSER')     ?: (getenv('MYSQL_USER')     ?: 'root');
-        $pass  = getenv('MYSQLPASSWORD') ?: (getenv('MYSQL_PASSWORD') ?: ($isRailway ? 'FuCJnrHXcSKZigIHjqhughtJcAOoQTHX' : ''));
+        $pass  = getenv('MYSQLPASSWORD') ?: (getenv('MYSQL_PASSWORD') ?: ($isRailway ? 'QfSCTskshvUOOGrqlbjHpowxhahCoBxW' : ''));
 
         $defaults = [
             'DB_HOST'            => $host,
