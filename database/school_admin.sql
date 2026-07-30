@@ -353,14 +353,6 @@ CREATE TABLE `especialidades` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Volcado de datos para la tabla `especialidades`
---
-
-INSERT INTO `especialidades` (`id`, `nombre`, `codigo`, `descripcion`, `activa`, `creado_en`) VALUES
-(1, 'Técnico en Informática', 'INF', 'Especialización en programación y sistemas', 1, '2026-06-25 18:22:28'),
-(2, 'Técnico en Electromecánica', 'EMC', 'Especialización en mecánica y electricidad', 1, '2026-06-25 18:22:28'),
-(3, 'Técnico en Construcciones', 'CON', 'Especialización en construcción civil', 1, '2026-06-25 18:22:28');
-
 -- --------------------------------------------------------
 
 --

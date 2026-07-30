@@ -176,12 +176,8 @@ try {
     ]);
     echo "✅  Hash generado.\n\n";
 
-    // 5. Cargar Especialidades y Turnos base
-    echo "⚙️  Creando Especialidades y Turnos...\n";
-    $db->query("INSERT INTO especialidades (id, nombre, codigo, descripcion, activa) VALUES 
-        (1, 'Técnico en Informática', 'INF', 'Especialización en programación y sistemas', 1),
-        (2, 'Técnico en Electromecánica', 'EMC', 'Especialización en mecánica y electricidad', 1),
-        (3, 'Técnico en Construcciones', 'CON', 'Especialización en construcción civil', 1)");
+    // 5. Cargar Turnos base
+    echo "⚙️  Creando Turnos...\n";
 
     $db->query("INSERT INTO turnos (id, nombre, hora_inicio, hora_fin, activo) VALUES 
         (1, 'Mañana', '08:00:00', '12:00:00', 1),
