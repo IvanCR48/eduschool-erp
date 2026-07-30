@@ -601,7 +601,7 @@ class ProfesorMapper extends BaseMapper
                     CASE
                         WHEN pm.curso_id IS NOT NULL THEN
                             CONCAT(c.anio, '° ', c.division,
-                                   CASE WHEN c.anio > 3 THEN CONCAT(' - ', esp.nombre) ELSE '' END)
+                                   CASE WHEN c.anio > 3 AND esp.nombre IS NOT NULL AND esp.nombre != '' THEN CONCAT(' - ', esp.nombre) ELSE '' END)
                         ELSE 'Sin curso específico'
                     END as curso
              FROM profesor_materia pm

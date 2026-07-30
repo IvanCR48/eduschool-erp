@@ -505,25 +505,26 @@ include 'includes/header.php';
                     <?php foreach ($materias_asignadas as $materia): ?>
                     <tr>
                         <td>
-                            <strong><?php echo htmlspecialchars($materia['nombre']); ?></strong>
+                            <strong><?php echo htmlspecialchars((string) ($materia['nombre'] ?? '')); ?></strong>
                             <?php if (!empty($materia['grupo_taller'])): ?>
-                                <span class="badge badge-info" style="background-color: #06b6d4; color: white; font-size: 0.65rem; padding: 0.1rem 0.25rem; border-radius: 4px; margin-left: 2px;"><?php echo htmlspecialchars(__('auto.grupo'), ENT_QUOTES, 'UTF-8'); ?><?php echo htmlspecialchars($materia['grupo_taller']); ?></span>
+                                <span class="badge badge-info" style="background-color: #06b6d4; color: white; font-size: 0.65rem; padding: 0.1rem 0.25rem; border-radius: 4px; margin-left: 2px;"><?php echo htmlspecialchars(__('auto.grupo'), ENT_QUOTES, 'UTF-8'); ?><?php echo htmlspecialchars((string) ($materia['grupo_taller'] ?? '')); ?></span>
                             <?php endif; ?>
                         </td>
                         <td>
-                            <?php if ($materia['curso'] === 'Sin curso específico'): ?>
-                                <span class="status status-warning"><?php echo htmlspecialchars($materia['curso']); ?></span>
+                            <?php $nombreCurso = (string) ($materia['curso'] ?? 'Sin curso específico'); ?>
+                            <?php if ($nombreCurso === 'Sin curso específico' || $nombreCurso === ''): ?>
+                                <span class="status status-warning"><?php echo htmlspecialchars($nombreCurso !== '' ? $nombreCurso : 'Sin curso específico'); ?></span>
                                 <br><small class="profesor-ficha-materia-hint"><?php echo htmlspecialchars(__('auto.registro_anterior_requiere_actualizaci_n'), ENT_QUOTES, 'UTF-8'); ?></small>
                             <?php else: ?>
-                                <span class="status status-success"><?php echo htmlspecialchars($materia['curso']); ?></span>
+                                <span class="status status-success"><?php echo htmlspecialchars($nombreCurso); ?></span>
                             <?php endif; ?>
                         </td>
                         <td>
-                            <small><?php echo $materia['fecha_asignacion'] ? date('d/m/Y', strtotime($materia['fecha_asignacion'])) : 'N/A'; ?></small>
+                            <small><?php echo !empty($materia['fecha_asignacion']) ? date('d/m/Y', strtotime((string)$materia['fecha_asignacion'])) : 'N/A'; ?></small>
                         </td>
                         <?php if ($puede_editar_ficha): ?>
                         <td>
-                            <form method="POST" class="profesor-ficha-inline-form js-confirm-submit" data-confirm-message="<?php echo htmlspecialchars('¿Está seguro de que desea desasignar esta materia del curso ' . $materia['curso'] . '?', ENT_QUOTES, 'UTF-8'); ?>">
+                            <form method="POST" class="profesor-ficha-inline-form js-confirm-submit" data-confirm-message="<?php echo htmlspecialchars('¿Está seguro de que desea desasignar esta materia del curso ' . $nombreCurso . '?', ENT_QUOTES, 'UTF-8'); ?>">
                                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8'); ?>">
                                 <input type="hidden" name="desasignar_materia" value="1">
                                 <input type="hidden" name="materia_curso_id" value="<?php echo (int) $materia['id']; ?>">
