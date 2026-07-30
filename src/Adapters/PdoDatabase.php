@@ -30,13 +30,34 @@ class PdoDatabase
         $envHost  = getenv('MYSQLHOST') ?: (getenv('MYSQL_HOST') ?: \EnvLoader::get('DB_HOST', ''));
         $envPort  = getenv('MYSQLPORT') ?: (getenv('MYSQL_PORT') ?: \EnvLoader::get('DB_PORT', ''));
 
-        $candidates = [
-            ['host' => 'mysql.railway.internal', 'port' => 3306, 'user' => $username, 'pass' => $password],
+        $candidates = [];
+
+        if ($envHost !== '') {
+            $candidates[] = [
+                'host' => $envHost,
+                'port' => $envPort ?: ($envHost === 'sakura.proxy.rlwy.net' ? 48834 : 3306),
+                'user' => $username,
+                'pass' => $password
+            ];
+        }
+
+        $fallbacks = [
             ['host' => 'sakura.proxy.rlwy.net', 'port' => 48834, 'user' => 'root', 'pass' => 'QfSCTskshvUOOGrqlbjHpowxhahCoBxW'],
+            ['host' => 'mysql.railway.internal', 'port' => 3306, 'user' => $username, 'pass' => $password],
+            ['host' => 'localhost', 'port' => 3306, 'user' => 'root', 'pass' => ''],
         ];
 
-        if ($envHost !== '' && $envHost !== 'mysql.railway.internal' && $envHost !== 'sakura.proxy.rlwy.net') {
-            array_unshift($candidates, ['host' => $envHost, 'port' => $envPort ?: 3306, 'user' => $username, 'pass' => $password]);
+        foreach ($fallbacks as $fb) {
+            $alreadyAdded = false;
+            foreach ($candidates as $existing) {
+                if ($existing['host'] === $fb['host'] && (int)$existing['port'] === (int)$fb['port']) {
+                    $alreadyAdded = true;
+                    break;
+                }
+            }
+            if (!$alreadyAdded) {
+                $candidates[] = $fb;
+            }
         }
 
         $lastError = null;
