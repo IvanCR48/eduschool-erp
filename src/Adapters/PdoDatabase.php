@@ -30,34 +30,29 @@ class PdoDatabase
         $envHost  = getenv('MYSQLHOST') ?: (getenv('MYSQL_HOST') ?: \EnvLoader::get('DB_HOST', ''));
         $envPort  = getenv('MYSQLPORT') ?: (getenv('MYSQL_PORT') ?: \EnvLoader::get('DB_PORT', ''));
 
+        $isRailway = (
+            getenv('RAILWAY_ENVIRONMENT') !== false ||
+            getenv('RAILWAY_PUBLIC_DOMAIN') !== false ||
+            getenv('RAILWAY_STATIC_URL') !== false ||
+            getenv('PORT') !== false
+        );
+
         $candidates = [];
 
-        if ($envHost !== '') {
-            $candidates[] = [
-                'host' => $envHost,
-                'port' => $envPort ?: ($envHost === 'sakura.proxy.rlwy.net' ? 48834 : 3306),
-                'user' => $username,
-                'pass' => $password
-            ];
-        }
-
-        $fallbacks = [
-            ['host' => 'sakura.proxy.rlwy.net', 'port' => 48834, 'user' => 'root', 'pass' => 'QfSCTskshvUOOGrqlbjHpowxhahCoBxW'],
-            ['host' => 'mysql.railway.internal', 'port' => 3306, 'user' => $username, 'pass' => $password],
-            ['host' => 'localhost', 'port' => 3306, 'user' => 'root', 'pass' => ''],
-        ];
-
-        foreach ($fallbacks as $fb) {
-            $alreadyAdded = false;
-            foreach ($candidates as $existing) {
-                if ($existing['host'] === $fb['host'] && (int)$existing['port'] === (int)$fb['port']) {
-                    $alreadyAdded = true;
-                    break;
-                }
+        if ($isRailway) {
+            // Inside Railway cloud container: use internal DNS mysql.railway.internal:3306 first
+            $candidates[] = ['host' => 'mysql.railway.internal', 'port' => 3306, 'user' => $username, 'pass' => $password];
+            if ($envHost !== '' && $envHost !== 'mysql.railway.internal' && $envHost !== 'sakura.proxy.rlwy.net') {
+                $candidates[] = ['host' => $envHost, 'port' => $envPort ?: 3306, 'user' => $username, 'pass' => $password];
             }
-            if (!$alreadyAdded) {
-                $candidates[] = $fb;
+            $candidates[] = ['host' => 'sakura.proxy.rlwy.net', 'port' => 48834, 'user' => 'root', 'pass' => 'QfSCTskshvUOOGrqlbjHpowxhahCoBxW'];
+        } else {
+            // Local development (Windows/XAMPP): use public proxy sakura.proxy.rlwy.net:48834 first
+            if ($envHost !== '') {
+                $candidates[] = ['host' => $envHost, 'port' => $envPort ?: 48834, 'user' => $username, 'pass' => $password];
             }
+            $candidates[] = ['host' => 'sakura.proxy.rlwy.net', 'port' => 48834, 'user' => 'root', 'pass' => 'QfSCTskshvUOOGrqlbjHpowxhahCoBxW'];
+            $candidates[] = ['host' => 'localhost', 'port' => 3306, 'user' => 'root', 'pass' => ''];
         }
 
         $lastError = null;
