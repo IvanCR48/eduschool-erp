@@ -8,6 +8,7 @@ class Database {
     private $connection;
     
     private function __construct() {
+        @ini_set('default_socket_timeout', '2');
         // Datos de conexión MySQL con variables de entorno (con fallback a Railway)
         $host     = getenv('MYSQLHOST') ?: (getenv('MYSQL_HOST') ?: EnvLoader::get('DB_HOST', 'localhost'));
         $port     = getenv('MYSQLPORT') ?: (getenv('MYSQL_PORT') ?: EnvLoader::get('DB_PORT', '3306'));

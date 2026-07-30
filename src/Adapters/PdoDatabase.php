@@ -19,6 +19,7 @@ class PdoDatabase
 
     public static function createFromEnv(): self
     {
+        @ini_set('default_socket_timeout', '2');
         require_once __DIR__ . '/../EnvLoader.php';
         \EnvLoader::load();
 
