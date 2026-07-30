@@ -1147,7 +1147,7 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `dni`, `apellido`, `nombre`, `email`, `telefono`, `password_hash`, `must_change_password`, `rol`, `activo`, `ultimo_acceso`, `intentos_fallidos`, `bloqueado_hasta`, `creado_en`, `actualizado_en`) VALUES
-(1, 'admin@escuela.edu', 'General', 'Admin', 'admin@escuela.edu', NULL, '$2y$10$LrxPvfD3467HdpJPfRaJw.ocvI3z.sXR6D4Ts3GHFpy64h9Z4liC6', 0, 'admin', 1, NULL, 0, NULL, '2026-06-25 18:22:28', '2026-06-25 18:22:28'),
+(1, 'admin', 'General', 'Admin', 'admin@escuela.edu', NULL, '$2y$10$LrxPvfD3467HdpJPfRaJw.ocvI3z.sXR6D4Ts3GHFpy64h9Z4liC6', 0, 'admin', 1, NULL, 0, NULL, '2026-06-25 18:22:28', '2026-06-25 18:22:28'),
 (2, 'profesor@escuela.edu', 'Docente', 'Profesor', 'profesor@escuela.edu', NULL, '$2y$10$t87iiAi7CPataxHPMtGOUenc6Q5V8aUpaEXkEW4/0b5PGK1ShC2eq', 0, 'profesor', 1, NULL, 0, NULL, '2026-06-25 18:22:28', '2026-06-25 18:22:28');
 
 -- --------------------------------------------------------

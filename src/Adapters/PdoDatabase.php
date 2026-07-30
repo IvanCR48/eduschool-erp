@@ -41,6 +41,16 @@ class PdoDatabase
 
         $lastError = null;
         foreach ($candidates as $c) {
+            // Pre-check TCP socket reachability with 1.5 second max timeout
+            $fp = @fsockopen($c['host'], (int) $c['port'], $errno, $errstr, 1.5);
+            if ($fp !== false) {
+                fclose($fp);
+            } else {
+                // Skip unreachable host candidate immediately without waiting for long PDO timeout
+                $lastError = new PDOException("TCP socket connection to {$c['host']}:{$c['port']} failed: $errstr");
+                continue;
+            }
+
             try {
                 $pdo = new PDO(
                     "mysql:host={$c['host']};port={$c['port']};dbname=$dbname;charset=utf8mb4",
@@ -50,7 +60,7 @@ class PdoDatabase
                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                         PDO::ATTR_EMULATE_PREPARES => false,
-                        PDO::ATTR_TIMEOUT => 5,
+                        PDO::ATTR_TIMEOUT => 2,
                         PDO::ATTR_PERSISTENT => false,
                     ]
                 );
